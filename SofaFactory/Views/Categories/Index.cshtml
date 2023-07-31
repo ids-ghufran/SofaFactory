@@ -1,0 +1,128 @@
+﻿@model IEnumerable<Domain.Models.Category>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Shop_Layout.cshtml";
+    var count = ViewBag.Count == 0 ? 1 : ViewBag.Count;
+    var page = ViewBag.Page;
+    var pageLength = ViewBag.PageLength;
+    var search = ViewBag.search == null ? "" : $"&search={ViewBag.search}";
+    var pages = (int)Math.Ceiling((double)(count / pageLength));
+    var plink = $"/Categories?pageLength={pageLength}{search}&page=" + ((page < 2) ? "1" : $"{page - 1}");
+    var nlink = $"/Categories?pageLength={pageLength}{search}&page=" +( (page < pages) ? $"{page + 1}" : pages.ToString());
+    var link = $"/Categories?pageLength={pageLength}{search}&page=";
+}
+
+
+<div class="container py-5">
+    <div class="card ">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h3 class="my-0">Categories</h3>
+            <div class="card-btns">   <a asp-action="Create">Create New</a> </div>
+        </div>
+        <div class="card-body">
+            <div class="container-fluid">
+                <div class="row">
+                    @foreach (var cat in Model)
+                    {
+                        <div class="col-md-3 my-3">
+                            <div class="category-container">
+                                <div class="category-Image">
+                                    <img src="@cat.Image.Src" class="category-image" />
+                                    <div class="category-title">@cat.Name</div>
+                                </div>
+                                <div class="category-description">@cat.Description.Substring(0,cat.Description.Length<150?cat.Description.Length:150)</div>
+                                <div class="category-actions">
+                                    <a href="/categories/edit?id=@cat.CategoryId" class="btn btn-info"><i class="fa fa-pencil"></i></a>
+                                    <a href="/categories/delete?id=@cat.CategoryId" data-id="@cat.CategoryId" class="btn btn-info"><i class="fa fa-trash"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        @if (pages > 0)
+        {
+            <div class="card-footer d-flex justify-content-end align-items-center">
+                @if (pages > 1)
+                {
+                    <ul class="pagination my-0">
+                        <li class="page-item"><a class="page-link" href="@plink">Prev</a></li>
+                        @for (var i = 1; i <= pages; i++)
+                        {
+                            var alink = link + i;
+                            var active = page == i ? "active" : "";
+                            <li class="page-item @active"><a class="page-link" href="@alink">@i</a></li>
+                        }
+                        <li class="page-item"><a class="page-link" href="@nlink">Next</a></li>
+                    </ul>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@section Styles{
+    <style>
+        .category-image{
+            width:100%;
+        }
+
+        .category-container {
+            position: relative;
+            border: 1px solid #2b783457;
+            border-radius: 10px;
+        }
+
+        div.category-Image {
+            position: relative;
+        }
+
+        .category-title {
+            position: absolute;
+            bottom: 0px;
+            background: #2b78349c;
+            width: 100%;
+            padding: 5px;
+            color: white;
+            font-size: 1.2rem;
+            backdrop-filter: blur(3px);
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            font-weight: 500;
+        }
+        .category-description {
+         position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        background: #ffffff2b;
+        backdrop-filter: blur(5px);
+        border-radius: 10px;
+        padding:5px 10px;
+            color: background: #2b7834;
+            display:none;
+            justify-content:center;
+            text-align:justify;
+            align-items:center;
+           /* z-index:10;*/
+    }
+
+            div.category-Image:hover + .category-description, .category-description:hover {
+            display:flex;
+        }
+
+        .category-actions {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            display: flex;
+            justify-content: end;
+            width: 100%;
+            gap: 5px;
+            padding: 5px;
+        }
+    </style>
+}
