@@ -102,7 +102,7 @@ namespace SofaFactory.Controllers
                     ParentId = 1,
                     CreatedOn = DateTime.Now,
                     UpdatedOn = DateTime.Now,
-                    Image = new Image()
+                    Image = new Domain.Models.Image()
                     {
                         Alt = category.Name,
                         Src = "/uploads/category/" + filename

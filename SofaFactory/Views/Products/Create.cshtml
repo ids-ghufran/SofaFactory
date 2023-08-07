@@ -7,20 +7,20 @@
 
 <div class="container-fluid px-5 py-5">
     <div class="card">
-    <div class="card-header">
+        <div class="card-header">
             <h4 class="card-title my-0">Add New Product</h4>
-    </div>
-    <div class="card-body">
-         
-            <form asp-action="Create">
+        </div>
+        <div class="card-body">
+
+            <form asp-action="Create" id="productForm">
                 <div class="row">
                     @*<div class="col-md-4">*@
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="form-group col-md-7">
                         <div class="mb-3">
-                        <label asp-for="Name" class="control-label"></label>
-                        <input asp-for="Name" class="form-control" />
-                         <span asp-validation-for="Name" class="text-danger"></span>
+                            <label asp-for="Name" class="control-label"></label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
                             <label for="Description" class="control-label">Seo Description</label>
@@ -28,17 +28,17 @@
                             <span asp-validation-for="Description" class="text-danger"></span>
                         </div>
                     </div>
-                   <div class="col-md-5">
-                       <div class="file-uploader-container" id="file-uploader">
-                           <div class="image-preview"></div>
-                           <div class="file-controls">
-                               <input type="file" class="file-input d-none" id="file-input" />
-                               <h5 class="file-control-label">Drag And Drop the files</h5>
-                               <button class="btn btn-light border">Select File</button>
-                           </div>
-                       </div>
-                   </div>
-                     <div class="form-group col-md-7">
+                    <div class="col-md-5">
+                        <div class="file-uploader-container" id="file-uploader">
+                            <div class="image-preview"></div>
+                            <div class="file-controls">
+                                <input type="file" class="file-input d-none" id="file-input" />
+                                <h5 class="file-control-label">Drag And Drop the files</h5>
+                                <button class="btn btn-light border">Select File</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-7">
                         <div class="mb-3">
                             <label asp-for="Details" class="control-label"></label>
                             <textarea rows="1" asp-for="Details" class="form-control"></textarea>
@@ -53,11 +53,23 @@
                     <div class="form-group col-md-5">
                         <div class="form-group ">
                             <label asp-for="CategoryId" class="control-label"></label>
-                            @*<select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>*@
+                            <select asp-for="CategoryId" class="form-control">
+                                <option>Select Category</option>
+                                @foreach (var cat in ViewBag.CategoryId)
+                                {
+                                    <option value="@cat.CategoryId">@cat?.Name</option>
+                                }
+                            </select>
                         </div>
                         <div class="form-group ">
                             <label asp-for="SubCategoryId" class="control-label"></label>
-                            @*<select asp-for="SubCategoryId" class="form-control" asp-items="ViewBag.SubCategoryId"></select>*@
+                            <select asp-for="SubCategoryId" class="form-control">
+                                <option>Select Sub Category</option>
+                                @foreach (var cat in ViewBag.CategoryId)
+                                {
+                                    <option value="@cat.CategoryId">@cat?.Name</option>
+                                }
+                            </select>
                         </div>
                         <div class="form-group ">
                             <label asp-for="Discount" class="control-label"></label>
@@ -67,7 +79,7 @@
                         </div>
                         <div class="form-group">
                             <label asp-for="DiscountType" class="control-label"></label>
-                            <select name="Discount" class="form-control" id="Discount">
+                            <select name="Discount" class="form-control" id="DiscountType">
                                 <option>Select Discount Type</option>
                                 <option value="1">Flat</option>
                                 <option value="2">Percent</option>
@@ -120,17 +132,17 @@
                     </div>
                     <div class="form-group col-md-6">
                         <input type="submit" value="Create" class="btn btn-primary" />
+
                     </div>
                 </div>
                 @*</div>*@
             </form>
 
-         
 
-    </div>
-    <div class="card-footer">
-         <a asp-action="Index">Back to List</a>
-    </div>
+        </div>
+        <div class="card-footer">
+            <a asp-action="Index">Back to List</a>
+        </div>
     </div>
 </div>
 
@@ -139,8 +151,7 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
     <script src="~/lib/summernote-0.8.18-dist/summernote-bs4.min.js"></script>
-    <script>
-        $('#Details').summernote({
+    <script>$('#Details').summernote({
             placeholder: 'Add Product Details',
             tabsize: 2,
             height: 100
@@ -193,45 +204,45 @@
                 reader.readAsDataURL(file);
             });
         }
-        class FileUploader{
-            constructor (_opt) {
-                let opt={id:"",fileCount:5,aspectRatio:1,errorHandler:undefined,..._opt}
-                this.elementId=opt.id;
-                this.files=[];
-                this.errorHandler= opt.errorHandler;
-                this.fileCount=opt.fileCount;
-                this.aspectRatio=opt.aspectRatio;
-                this.fileIp=document.querySelector(`#${opt.id}`);
+        class FileUploader {
+            constructor(_opt) {
+                let opt = { id: "", fileCount: 5, aspectRatio: 1, errorHandler: undefined, ..._opt }
+                this.elementId = opt.id;
+                this.files = [];
+                this.errorHandler = opt.errorHandler;
+                this.fileCount = opt.fileCount;
+                this.aspectRatio = opt.aspectRatio;
+                this.fileIp = document.querySelector(`#${opt.id}`);
                 this.input = this.fileIp.querySelector("#file-input");
                 this.btn = this.fileIp.querySelector("button");
                 this.label = this.fileIp.querySelector(".file-control-label");
                 this.previewElement = this.fileIp.querySelector(".image-preview");
-                this.fileIp.addEventListener("dragover", (e)=> this.handleDragOver(e));
-                this.fileIp.addEventListener("dragleave",(e) =>this.handleDragLeave(e));
-                this.fileIp.addEventListener("drop",(e)=>this.handleDrop(e));
-                this.btn.type="button";
-                this.btn.addEventListener("click", () =>  this.input.click() );
-                this.input.addEventListener("change",(e)=>this.handleFileSelect(e));
+                this.fileIp.addEventListener("dragover", (e) => this.handleDragOver(e));
+                this.fileIp.addEventListener("dragleave", (e) => this.handleDragLeave(e));
+                this.fileIp.addEventListener("drop", (e) => this.handleDrop(e));
+                this.btn.type = "button";
+                this.btn.addEventListener("click", () => this.input.click());
+                this.input.addEventListener("change", (e) => this.handleFileSelect(e));
                 console.log("label_c > ", this.label);
             }
-            getFile(){
+            getFile() {
                 return this.files;
             }
-            handleFileSelect(e){
+            handleFileSelect(e) {
                 this.handleFiles(e.target.files);
-                setTimeout(()=>{e.target.value=null},1000)
+                setTimeout(() => { e.target.value = null }, 1000)
             }
-            handleDragOver(e){
+            handleDragOver(e) {
                 e.preventDefault();
-                this.label.innerHTML="Drop";
+                this.label.innerHTML = "Drop";
             }
-            handleDrop(e){
+            handleDrop(e) {
                 e.preventDefault();
                 this.label.innerHTML = "Drag And Drop the files";
                 const files = e.dataTransfer.files;
                 this.handleFiles(files);
             }
-            handleDragLeave (e) {
+            handleDragLeave(e) {
                 e.preventDefault();
                 //console.log("leave", label);
                 this.label.innerHTML = "Drag And Drop the files";
@@ -242,18 +253,18 @@
                     this.createFilePreview(file);
                 }
             }
-            createFilePreview(file){
-                console.log("file",file);
+            createFilePreview(file) {
+                console.log("file", file);
                 const previewImage = document.createElement("img");
                 previewImage.src = URL.createObjectURL(file.file);
                 previewImage.alt = file.name;
-                previewImage.style.width="100%";
-                var parent= document.createElement("div");
+                previewImage.style.width = "100%";
+                var parent = document.createElement("div");
                 parent.classList.add("image-item");
-                var deleteBtn= document.createElement('button')
+                var deleteBtn = document.createElement('button')
                 deleteBtn.classList.add("delete-btn");
-                deleteBtn.innerHTML="<i class='fa fa-trash'></i>";
-                deleteBtn.type="button";
+                deleteBtn.innerHTML = "<i class='fa fa-trash'></i>";
+                deleteBtn.type = "button";
                 deleteBtn.addEventListener("click", () => this.deleteFile(file));
                 parent.appendChild(previewImage);
                 parent.appendChild(deleteBtn);
@@ -263,31 +274,31 @@
                 this.files = this.files.filter((f) => f.id !== file.id);
                 this.updatePreview();
             }
-            async handleFiles(files){
-                if (this.files.length >= this.fileCount || (this.files.length+files.length>this.fileCount)) {
-                    files=undefined;
+            async handleFiles(files) {
+                if (this.files.length >= this.fileCount || (this.files.length + files.length > this.fileCount)) {
+                    files = undefined;
                     alert(`Only ${this.fileCount} files can be uploaded`);
                     return;
                 }
-                 for (const file of files) {
+                for (const file of files) {
                     let length = this.files.length;
-                    let validtype= validateFileType(file);
+                    let validtype = validateFileType(file);
                     let validshape = await validateAspectRatio(file, this.aspectRatio);
-                    if(validtype && validshape){
+                    if (validtype && validshape) {
                         let f = { "name": file.name, file: file, id: length == 0 ? length + 1 : this.files[length - 1].id + 1 };
                         this.files.push(f);
                         this.createFilePreview(f);
                     }
-                    else{
-                        if (!validtype){
-                            if(!this.errorHandler)
-                                 alert(`Please make sure that ${file.name} is image file.`);
+                    else {
+                        if (!validtype) {
+                            if (!this.errorHandler)
+                                alert(`Please make sure that ${file.name} is image file.`);
                             else
                                 this.errorHandler(`Please make sure that ${file.name} is image file.`)
                         }
-                        else{
+                        else {
                             if (!this.errorHandler)
-                              alert(`Please make sure that image file  have aspect ratio of ${this.aspectRatio}.`);
+                                alert(`Please make sure that image file  have aspect ratio of ${this.aspectRatio}.`);
                             else
                                 this.errorHandler(`Please make sure that image file  have aspect ratio of ${this.aspectRatio}.`)
                         }
@@ -296,9 +307,73 @@
             }
         }
 
-        var dragel = new FileUploader({id:"file-uploader",fileCount:4,aspectRatio:1});
-        console.log("file-uploader",dragel);
+        var dragel = new FileUploader({ id: "file-uploader", fileCount: 4, aspectRatio: 1 });</script>
+
+    <script>
+    $(document).ready(function () {
+        $('#productForm').submit(function (e) {
+            e.preventDefault(); // Prevent the default form submission behavior
+
+            const formObj = {
+                name: $("#Name").val(),
+                    description : $("#Description").val(),
+                    details : "Details",//$("#Details").val(),
+                    highlights : "Highllights", //$("#Highlights").val(),
+                    rating : $("#Rating").val(),
+                    color : $("#Color").val(),
+                    assemblyDetails : $("#AssemblyDetails").val(),
+                    quantity : $("#Quantity").val(),
+                    warranty : $("#Warranty").val(),
+                    packageDetails : $("#PackageDetails").val(),
+                    categoryId : $("#CategoryId").val(),
+                    subCategoryId : $("#SubCategoryId").val(),
+                    discount : $("#Discount").val(),
+                    discountType : $("#DiscountType").val(),
+                    dimensions : $("#Dimensions").val(),
+                    seatingCapacity : $("#SeatingCapacity").val(),
+            }
+            var formData = toFormData(formObj)
+            var imgs = dragel.getFile().map(x => x.file)
+            for (var i = 0; i < imgs.length; i++) {
+                formData.append("images", imgs[i])
+            }
+
+            console.log(formData, formObj)
+
+            // Make an Ajax request
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("create", "Products")', // Replace with your controller and action names
+                data: formData,
+                processData: false, // Set this to false when using FormData
+                contentType: false, // Set this to false when using FormData
+                success: function (data) {
+                    // Handle the response from the server, if needed
+                    console.log(data);
+                    window.location.href("/products")
+                },
+                error: function (error) {
+                    // Handle any errors that occur during the Ajax request
+                    console.log('Error:', error);
+                }
+            });
+        });
+    });
+
+
+        function toFormData(obj) {
+            const formData = new FormData();
+            for (const key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    formData.append(key, obj[key]);
+                }
+            }
+            return formData;
+        }
+
     </script>
+
+
 }
 @section Styles {
     <link href="~/lib/summernote-0.8.18-dist/summernote-bs4.min.css" rel="stylesheet" />
@@ -314,6 +389,7 @@
             justify-content: center;
             align-items: center;
         }
+
         .file-controls {
             position: relative;
             top: 30px;
@@ -321,7 +397,7 @@
             flex-direction: column;
             width: 220px;
             text-align: center;
-}
+        }
 
         .file-uploader-container .image-preview {
             position: absolute;

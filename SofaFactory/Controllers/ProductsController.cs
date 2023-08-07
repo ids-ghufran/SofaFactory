@@ -7,16 +7,21 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Domain.Models;
 using SofaFactory.Data;
+using System.Data.SqlTypes;
+using SofaFactory.Models;
+using SofaFactory.Helper;
 
 namespace SofaFactory.Controllers
 {
     public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment environment;
 
-        public ProductsController(ApplicationDbContext context)
+        public ProductsController(ApplicationDbContext context, IWebHostEnvironment environment)
         {
             _context = context;
+            this.environment = environment;
         }
 
         // GET: Products
@@ -47,10 +52,11 @@ namespace SofaFactory.Controllers
         }
 
         // GET: Products/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CreatedById");
-            ViewData["SubCategoryId"] = new SelectList(_context.Categories, "CategoryId", "CreatedById");
+            //ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CreatedById");
+            //ViewData["SubCategoryId"] = new SelectList(_context.Categories, "CategoryId", "CreatedById");
+            ViewData["CategoryId"] = await _context.Categories.ToListAsync();
             return View();
         }
 
@@ -58,20 +64,66 @@ namespace SofaFactory.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,Name,Description,Details,CategoryId,SubCategoryId,Discount,DiscountType,Rating,Quantity,Dimensions,Highlights,Color,Warranty,SeatingCapacity,AssemblyDetails,PackageDetails,CreatedOn,UpdatedOn,CreatedById,UpdatedById")] Product product)
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([FromForm] ProductVm modal)
         {
-            if (ModelState.IsValid)
+
+            var product = new Product
             {
-                _context.Add(product);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                Name = modal.Name,
+                Description = modal.Description,
+                Details = modal.Details,
+                CategoryId = modal.CategoryId,
+                SubCategoryId = modal.SubCategoryId,
+                Discount = modal.Discount,
+                DiscountType = modal.DiscountType,
+                Rating = modal.Rating,
+                Quantity = modal.Quantity,
+                Dimensions = modal.Dimensions,
+                Highlights = modal.Highlights,
+                Color = modal.Color,
+                Warranty = modal.Warranty,
+                SeatingCapacity = modal.SeatingCapacity,
+                AssemblyDetails = modal.AssemblyDetails,
+                PackageDetails = modal.PackageDetails,
+                CreatedOn = DateTime.Now
+            };
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Validation failed");
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CreatedById", product.CategoryId);
-            ViewData["CreatedById"] = new SelectList(_context.Set<AppUser>(), "Id", "Id", product.CreatedById);
-            ViewData["SubCategoryId"] = new SelectList(_context.Categories, "CategoryId", "CreatedById", product.SubCategoryId);
-            ViewData["UpdatedById"] = new SelectList(_context.Set<AppUser>(), "Id", "Id", product.UpdatedById);
-            return View(product);
+            _context.Add(product);
+            await _context.SaveChangesAsync();
+            var imgPath = Path.Combine(environment.WebRootPath, "assets", "images", "products");
+            if (modal.Images.Count < 0)
+            {
+                var imgUrl = await FileHelper.SaveFilesAsync(modal.Images, imgPath);
+                var imgs = new List<ProductImage>();
+                for(var i = 0; i<modal.Images.Count; i++)
+                {
+
+                    imgs.Add(new ProductImage
+                    {
+                        Image = new Image
+                        {
+                            Src = imgUrl[0],
+                            Alt = "Product Image",
+                            CreatedOn = DateTime.Now
+                        },
+                        ProductId = product.ProductId,
+                        Rank = i+1
+                    });
+                }
+                _context.ProductImages.AddRange(imgs);
+                await _context.SaveChangesAsync();
+            }
+            return Ok("Success");
+            
+            //ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CreatedById", product.CategoryId);
+            //ViewData["CreatedById"] = new SelectList(_context.Set<AppUser>(), "Id", "Id", product.CreatedById);
+            //ViewData["SubCategoryId"] = new SelectList(_context.Categories, "CategoryId", "CreatedById", product.SubCategoryId);
+            //ViewData["UpdatedById"] = new SelectList(_context.Set<AppUser>(), "Id", "Id", product.UpdatedById);
+            
         }
 
         // GET: Products/Edit/5

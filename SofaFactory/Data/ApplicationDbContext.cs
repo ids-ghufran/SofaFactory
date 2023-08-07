@@ -23,7 +23,7 @@ namespace SofaFactory.Data
         public DbSet<OrderDetails> OrderDetails { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<Payment> Payments { get; set; }
-        public DbSet<Image> Images { get; set; }
+        public DbSet<Domain.Models.Image> Images { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
 
