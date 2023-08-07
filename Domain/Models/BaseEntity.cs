@@ -20,8 +20,8 @@ namespace Domain.Models
         [Column]
         public string? UpdatedById { get; set; }
         [JsonIgnore]
-        public AppUser CreatedBy { get; set; }
-           [JsonIgnore]
-        public AppUser UpdatedBy { get; set; }
+        public AppUser? CreatedBy { get; set; }
+        [JsonIgnore]
+        public AppUser? UpdatedBy { get; set; }
     }
 }

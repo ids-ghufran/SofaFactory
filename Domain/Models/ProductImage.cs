@@ -12,7 +12,7 @@ namespace Domain.Models
             public int Id { get; set; }
             public int ProductId { get; set; }
             public int ImageId { get; set; }
-            public Image Image { get; set; }
+            public Image? Image { get; set; }
             public Product Product { get; set; }
             public int Rank { get; set; }
        

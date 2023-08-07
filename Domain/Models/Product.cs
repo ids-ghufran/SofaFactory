@@ -29,11 +29,11 @@ namespace Domain.Models
         public string AssemblyDetails { get; set; }
         public string PackageDetails { get; set; }
         [NotMapped]
-        public virtual List<Image> Images { get; set; }
-        public List<ProductImage> ProductImages { get; set; }
-        public Category Category { get; set; }
-        public Category SubCategory { get; set; }
-        public Brand Brand { get; set; }
+        public virtual List<Image>? Images { get; set; }
+        public List<ProductImage>? ProductImages { get; set; }
+        public Category? Category { get; set; }
+        public Category? SubCategory { get; set; }
+        public Brand? Brand { get; set; }
     }
   
     public enum DiscountType {

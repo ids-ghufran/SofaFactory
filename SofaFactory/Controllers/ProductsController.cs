@@ -90,7 +90,8 @@ namespace SofaFactory.Controllers
             };
             if (!ModelState.IsValid)
             {
-                return BadRequest("Validation failed");
+                Response.StatusCode = 422;
+                return Json(ModelState.ToSerializedDictionary());
             }
             _context.Add(product);
             await _context.SaveChangesAsync();

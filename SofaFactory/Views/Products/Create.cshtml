@@ -46,7 +46,7 @@
                         </div>
                         <div class="mb-3">
                             <label asp-for="Highlights" class="control-label"></label>
-                            <input asp-for="Highlights" class="form-control" />
+                            <textarea asp-for="Highlights" class="form-control"></textarea>
                             <span asp-validation-for="Highlights" class="text-danger"></span>
                         </div>
                     </div>
@@ -131,7 +131,7 @@
                         <span asp-validation-for="PackageDetails" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-6">
-                        <input type="submit" value="Create" class="btn btn-primary" />
+                        <input id="submitBtn" type="button" value="Create" class="btn btn-primary" />
 
                     </div>
                 </div>
@@ -311,14 +311,13 @@
 
     <script>
     $(document).ready(function () {
-        $('#productForm').submit(function (e) {
+        $('#submitBtn').click(function (e) {
             e.preventDefault(); // Prevent the default form submission behavior
-
             const formObj = {
                 name: $("#Name").val(),
                     description : $("#Description").val(),
-                    details : "Details",//$("#Details").val(),
-                    highlights : "Highllights", //$("#Highlights").val(),
+                    details : $("#Details").val(),
+                    highlights : $("#Highlights").val(),
                     rating : $("#Rating").val(),
                     color : $("#Color").val(),
                     assemblyDetails : $("#AssemblyDetails").val(),
@@ -350,11 +349,16 @@
                 success: function (data) {
                     // Handle the response from the server, if needed
                     console.log(data);
-                    window.location.href("/products")
+                    window.location.href = "/products"
                 },
-                error: function (error) {
+                error: function (errors) {
                     // Handle any errors that occur during the Ajax request
-                    console.log('Error:', error);
+                    console.log('Error:', errors);
+                    for (var err in errors.responseJSON) {
+                        console
+                        $(`#${err}`).parent().append(`<span class="text-danger field-validation-error" data-valmsg-for="${err}" data-valmsg-replace="true"><span id="${err}-error" class="">${errors.responseJSON?.map(x => x)}</span></span>`)
+                    }
+
                 }
             });
         });
