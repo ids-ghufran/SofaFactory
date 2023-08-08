@@ -6,363 +6,432 @@
 }
 
 <div class="container-fluid px-5 py-5">
-    <div class="card">
-        <div class="card-header">
+      <div class="card">
+           <div class="card-header">
             <h4 class="card-title my-0">Add New Product</h4>
         </div>
-        <div class="card-body">
-
-            <form asp-action="Create" id="productForm">
-                <div class="row">
-                    @*<div class="col-md-4">*@
+          <div class="card-body">
+               <form asp-action="Create" id="productForm">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <div class="form-group col-md-7">
-                        <div class="mb-3">
-                            <label asp-for="Name" class="control-label"></label>
-                            <input asp-for="Name" class="form-control" />
-                            <span asp-validation-for="Name" class="text-danger"></span>
-                        </div>
-                        <div class="mb-3">
-                            <label for="Description" class="control-label">Seo Description</label>
-                            <textarea asp-for="Description" class="form-control"></textarea>
-                            <span asp-validation-for="Description" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                        <div class="file-uploader-container" id="file-uploader">
-                            <div class="image-preview"></div>
-                            <div class="file-controls">
-                                <input type="file" class="file-input d-none" id="file-input" />
-                                <h5 class="file-control-label">Drag And Drop the files</h5>
-                                <button class="btn btn-light border">Select File</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group col-md-7">
-                        <div class="mb-3">
-                            <label asp-for="Details" class="control-label"></label>
-                            <textarea rows="1" asp-for="Details" class="form-control"></textarea>
-                            <span asp-validation-for="Details" class="text-danger"></span>
-                        </div>
-                        <div class="mb-3">
-                            <label asp-for="Highlights" class="control-label"></label>
-                            <textarea asp-for="Highlights" class="form-control"></textarea>
-                            <span asp-validation-for="Highlights" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="form-group col-md-5">
-                        <div class="form-group ">
-                            <label asp-for="CategoryId" class="control-label"></label>
-                            <select asp-for="CategoryId" class="form-control">
-                                <option>Select Category</option>
-                                @foreach (var cat in ViewBag.CategoryId)
-                                {
-                                    <option value="@cat.CategoryId">@cat?.Name</option>
-                                }
+                     <div class="row">
+                         <div class="col-md-7">
+                             <div class="step">
+                                 <div class="form-group mb-3">
+                                          <label asp-for="Name" class="control-label"></label>
+                                          <input asp-for="Name" data-rules="required:true, minlength:3" class="form-control" />
+                                          <span asp-validation-for="Name" class="text-danger"></span>
+                                 </div>
+                                   <div class="form-group mb-3">
+                                          <label for="Description" class="control-label">Seo Description</label>
+                                         <textarea asp-for="Description" data-rules="required:true,minlength:50" class="form-control"></textarea>
+                                         <span asp-validation-for="Description" class="text-danger"></span>
+                                 </div>
+                             </div>
+                               <div class="step">
+                                     <div class="form-group mb-3">
+                                            <label asp-for="Details" class="control-label"></label>
+                                <textarea rows="1" data-rules="summernoteRequired:true,summernoteMinLength:50" asp-for="Details" class="form-control"></textarea>
+                                            <span asp-validation-for="Details" class="text-danger"></span>
+                                    </div>
+                                   <div class="form-group mb-3">
+                                        <label asp-for="Highlights" class="control-label"></label>
+                                        <textarea asp-for="Highlights" data-rules="summernoteRequired:true,summernoteMinLength:50" class="form-control"></textarea>
+                                        <span asp-validation-for="Highlights" class="text-danger"></span>
+                                 </div>
+                             </div>
+                               <div class="step">
+                                 <div class="form-group mb-3">
+                                                  <div class="form-group ">
+                                        <label asp-for="CategoryId" class="control-label"></label>
+                                    <select asp-for="CategoryId" data-rules="required:true" class="form-control">
+                                            <option value="">Select Category</option>
+                                                    @foreach (var cat in ViewBag.CategoryId)
+                                                    {
+                                                    <option value="@cat.CategoryId">@cat?.Name</option>
+                                                    }
+                                        </select>
+                                 </div>
+                                  <div class="form-group">
+                                    <label asp-for="SubCategoryId"  class="control-label"></label>
+                                    <select asp-for="SubCategoryId" data-rules="required:true" class="form-control">
+                                <option value="">Select Sub Category</option>
+                                        @foreach (var cat in ViewBag.CategoryId)
+                                        {
+                                        <option value="@cat.CategoryId">@cat?.Name</option>
+                                        }
                             </select>
-                        </div>
-                        <div class="form-group ">
-                            <label asp-for="SubCategoryId" class="control-label"></label>
-                            <select asp-for="SubCategoryId" class="form-control">
-                                <option>Select Sub Category</option>
-                                @foreach (var cat in ViewBag.CategoryId)
-                                {
-                                    <option value="@cat.CategoryId">@cat?.Name</option>
-                                }
-                            </select>
-                        </div>
-                        <div class="form-group ">
-                            <label asp-for="Discount" class="control-label"></label>
-                            <input asp-for="Discount" class="form-control" />
+                                 </div>
+                             </div>
+                             </div>
+                               <div class="step ">
+                            <div class="form-group mb-3">
+                                     <label asp-for="Discount" class="control-label"></label>
+                                <input asp-for="Discount" data-rules="required:true,number:true" class="form-control" />
+                                    <span asp-validation-for="Discount" class="text-danger"></span>
+                                 </div>
+                                   <div class="form-group">
+                                        <label asp-for="DiscountType" class="control-label"></label>
+                                <select name="DiscountType" data-rules="required:true" class="form-control" id="DiscountType">
+                                            <option value="">Select Discount Type</option>
+                                            <option value="1">Flat</option>
+                                            <option value="2">Percent</option>
+                                        </select>
+                                        <span asp-validation-for="DiscountType" class="text-danger"></span>
+                                 </div>
+                             </div>
+                               <div class="step">
+                                   <div class="form-group mb-3">
+                                        <label asp-for="Rating" class="control-label"></label>
+                                         <input asp-for="Rating" data-rules="required:true,number:true,max:5,min:0" class="form-control" />
+                                        <span asp-validation-for="Rating" class="text-danger"></span>
+                                   </div>
+                                   <div class="form-group">
+                                        <label asp-for="Quantity" class="control-label"></label>
+                                       <input asp-for="Quantity" data-rules="required:true, number:true" class="form-control" />
+                                        <span asp-validation-for="Quantity" class="text-danger"></span>
+                                   </div>
+                               </div>
+                               <div class="step">
+                                   <div class="form-group mb-3">
+                                        <label asp-for="Dimensions" class="control-label"></label>
+                                        <input asp-for="Dimensions" data-rules="required:true" class="form-control" />
+                                        <span asp-validation-for="Dimensions" class="text-danger"></span>
+                                   </div>
+                                   <div class="form-group">
+                                        <label asp-for="Color" class="control-label"></label>
+                                         <input asp-for="Color" data-rules="required:true" class="form-control" />
+                                        <span asp-validation-for="Color" class="text-danger"></span>
+                                   </div>
+                               </div>
+                               <div class="step">
+                                   <div class="form-group mb-3">
+                                    <label asp-for="Warranty" class="control-label"></label>
+                                <input asp-for="Warranty" data-rules="required:true, number:true" class="form-control" />
+                                    <span asp-validation-for="Warranty" class="text-danger"></span>
+                                   </div>
+                                   <div class="form-group">
+                                    <label asp-for="SeatingCapacity" class="control-label"></label>
+                                <input asp-for="SeatingCapacity" data-rules="required:true" class="form-control" />
+                                    <span asp-validation-for="SeatingCapacity" class="text-danger"></span>
+                                   </div>
+                               </div> 
+                               <div class="step">
+                                   <div class="form-group mb-3">
+                                    <label asp-for="AssemblyDetails"  class="control-label"></label>
+                                    <input asp-for="AssemblyDetails" data-rules="required:true" class="form-control" />
+                                    <span asp-validation-for="AssemblyDetails" class="text-danger"></span>
+                                   </div>
+                                   <div class="form-group">
+                                    <label asp-for="PackageDetails" class="control-label"></label>
+                                     <input asp-for="PackageDetails" data-rules="required:true" class="form-control" />
+                                    <span asp-validation-for="PackageDetails" class="text-danger"></span>
+                                   </div>
+                               </div>
+                               <div class="step-controls d-flex justify-content-between">
+                                   <div class="step-navs"></div>
+                                   <div class="steppers">
+                                       <button class="btn btn-info prev" type="button">Prev</button>
+                                       <button class="btn btn-info next mx-2" type="button">Next</button>
+                                   </div>
+                               </div>
+                         </div>
+                         <div class="col-md-5">
+                            <div class="file-uploader-container" id="file-uploader"></div>
+                         </div>
+                     </div>
+               </form>
+          </div>
 
-                            <span asp-validation-for="Discount" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="DiscountType" class="control-label"></label>
-                            <select name="Discount" class="form-control" id="DiscountType">
-                                <option>Select Discount Type</option>
-                                <option value="1">Flat</option>
-                                <option value="2">Percent</option>
-                            </select>
-                            <span asp-validation-for="DiscountType" class="text-danger"></span>
-                        </div>
-
-                    </div>
-
-                    <div class="form-group col-md-4">
-                        <label asp-for="Rating" class="control-label"></label>
-                        <input asp-for="Rating" class="form-control" />
-                        <span asp-validation-for="Rating" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label asp-for="Quantity" class="control-label"></label>
-                        <input asp-for="Quantity" class="form-control" />
-                        <span asp-validation-for="Quantity" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label asp-for="Dimensions" class="control-label"></label>
-                        <input asp-for="Dimensions" class="form-control" />
-                        <span asp-validation-for="Dimensions" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-group col-md-4">
-                        <label asp-for="Color" class="control-label"></label>
-                        <input asp-for="Color" class="form-control" />
-                        <span asp-validation-for="Color" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label asp-for="Warranty" class="control-label"></label>
-                        <input asp-for="Warranty" class="form-control" />
-                        <span asp-validation-for="Warranty" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label asp-for="SeatingCapacity" class="control-label"></label>
-                        <input asp-for="SeatingCapacity" class="form-control" />
-                        <span asp-validation-for="SeatingCapacity" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label asp-for="AssemblyDetails" class="control-label"></label>
-                        <input asp-for="AssemblyDetails" class="form-control" />
-                        <span asp-validation-for="AssemblyDetails" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label asp-for="PackageDetails" class="control-label"></label>
-                        <input asp-for="PackageDetails" class="form-control" />
-                        <span asp-validation-for="PackageDetails" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <input id="submitBtn" type="button" value="Create" class="btn btn-primary" />
-
-                    </div>
-                </div>
-                @*</div>*@
-            </form>
-
-
-        </div>
-        <div class="card-footer">
-            <a asp-action="Index">Back to List</a>
-        </div>
-    </div>
+      </div>
 </div>
-
 @section Scripts {
     @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        //await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/js/fileuploader.js"></script>
     <script src="~/lib/summernote-0.8.18-dist/summernote-bs4.min.js"></script>
-    <script>$('#Details').summernote({
-            placeholder: 'Add Product Details',
-            tabsize: 2,
-            height: 100
+    <script src="~/lib/sweetalert.js"></script>
+    <script>
+        console.log("validatorplugin >", $.validator);
+        $(document).ready(()=>{
+            $.validator.addMethod('summernoteRequired', function (value, element) {
+                // You can customize this validation logic based on your requirements
+                console.log($(element).val());
+                return $(element).val().length>0;
+            }, 'This field is required.');
+
+            $.validator.addMethod('summernoteMinLength', function (value, element, params) {
+                var content = $(value).summernote('code');
+                var text = $('<div>').html(content).text(); // Extract text content
+                return text.length >= params;
+            }, $.validator.format('Please enter at least {0} characters.'));
+
+            // Add custom validation method for maximum length
+            $.validator.addMethod('summernoteMaxLength', function (value, element, params) {
+                var content = $(value).summernote('code');
+                var text = $('<div>').html(content).text(); // Extract text content
+                return text.length <= params;
+            }, $.validator.format('Please enter no more than {0} characters.'));
+
+        });
+        var f_steps=[];
+        var validationRules = {};
+        var validator={};
+        $(document).ready(()=>{
+        f_steps= Array.from( document.querySelectorAll(".step"));
+        let formObject={};
+        let dots=f_steps.map((val,ind)=>{
+                $(val).attr("data-id",ind);
+               var qs= Array.from( val.querySelectorAll('.form-control'));
+               qs.map(val=>{
+                  let name= $(val).attr("name");
+               formObject[name]="step_"+ind;
+               });
+                return`<span class="dot ${ind==0 ?'active':''}" data-id="${ind}"></span>`
+        });
+        console.log('formobject > ', formObject);
+        $(".step-navs").append(dots);
+        f_steps[0].classList.add("active");
+        $('.prev').attr("disabled",true);
+
+           
+            $('[data-rules]').each(function () {
+                var fieldName = $(this).attr('name');
+                var fieldRules = $(this).data('rules');
+                let valObj={};
+                fieldRules.split(",").map(val=>{ 
+                let rule=val.split(":");
+                    valObj[rule[0].trim()] = parseValue(rule[1].trim());
+                })
+                validationRules[fieldName] = valObj;
+            });
+
+            console.log('validation >' , validationRules);
+             validator = $("#productForm").validate({
+                rules:{
+                    ...validationRules
+                }
+            });
+
+            $('form').each(function () {
+                if ($(this).data('validator'))
+                    $(this).data('validator').settings.ignore = ".note-editor *";
+            });
         });
 
+        $('.next').click(function(){
+        let self=this;
+        let active_page= $('.dot.active').data('id');
+            let len = Array.from(document.querySelectorAll(".step")).length;
+            let next_page = active_page < (len-1)? active_page+1:len-1;
+            let isSubmit = $(".next").html()=="Submit";
+            if(next_page==(len-1)){
+                $(".next").html("Submit");
+            }
+
+            if(isSubmit){
+                let fileCount =dragel.getFileCount();
+                console.log("filecount",fileCount);
+                console.log("filecount D >",dragel.getFile().length);
+                
+                if(fileCount<1){
+                    swal("","Please Select Product Images","error");
+                    return;
+                }else{
+                    $(".next").attr('disabled',true);
+                    submitFrom().then().catch(()=>{
+                        $(".next").attr('disabled', false);
+                    });
+                }
+            }else{
+                let pageInputs = $('.step.active').find('.form-control').valid();
+                console.log("next_page", next_page);
+                if (pageInputs) {
+                    $('.step.active').removeClass('active');
+                    $('.dot.active').removeClass('error');
+                    $('.dot.active').removeClass('active');
+                    $(`.step[data-id="${next_page}"]`).addClass("active");
+                    $(`.dot[data-id="${next_page}"]`).addClass("active");
+                }
+                else {
+                    $('.dot.active').addClass("error");
+                }
+                if (Number(next_page) >= 1) {
+                    $('.prev').attr("disabled", false);
+                } else {
+                    $('.prev').attr("disabled", true);
+                }
+            }
+        
+       
+        });
+        $('.prev').click(function(){
+            let self = this;
+            let active_page = $('.dot.active').data('id');
+            console.log("active page",active_page);
+            let prev_page=active_page<1?0:active_page-1;
+           parseInt( active_page) == 1 ? $('.prev').attr("disabled", true) : $('.prev').attr("disabled", false);;
+            $('.step.active').removeClass('active');
+            //$('.dot.active').removeClass('error');
+            $('.dot.active').removeClass('active');
+            $(`.step[data-id="${prev_page}"]`).addClass("active");
+            $(`.dot[data-id="${prev_page}"]`).addClass("active");
+            $(".next").html("Next");
+        })
+        var detailsEl = $('#Details');
+        
+        $('#Details').summernote({
+            placeholder: 'Add Product Details',
+            tabsize: 2,
+            height: 100,
+            callbacks: {
+                onChange: function (contents, $editable) {
+                    // Note that at this point, the value of the `textarea` is not the same as the one
+                    // you entered into the summernote editor, so you have to set it yourself to make
+                    // the validation consistent and in sync with the value.
+                    detailsEl.val(detailsEl.summernote('isEmpty') ? "" : contents);
+                    // You should re-validate your element after change, because the plugin will have
+                    // no way to know that the value of your `textarea` has been changed if the change
+                    // was done programmatically.
+                    validator.element(detailsEl);
+                }
+            }
+        });
+        var highLightEl = $('#Highlights');
         $('#Highlights').summernote({
             placeholder: 'Add Product Highlights.',
             tabsize: 2,
-            height: 100
+            height: 100,
+            callbacks: {
+                onChange: function (contents, $editable) {
+                    // Note that at this point, the value of the `textarea` is not the same as the one
+                    // you entered into the summernote editor, so you have to set it yourself to make
+                    // the validation consistent and in sync with the value.
+                    highLightEl.val(highLightEl.summernote('isEmpty') ? "" : contents);
+                    console.log("summernote ele high :", detailsEl.summernote('isEmpty'));
+                    // You should re-validate your element after change, because the plugin will have
+                    // no way to know that the value of your `textarea` has been changed if the change
+                    // was done programmatically.
+                    validator.element(highLightEl);
+                }
+            }
         });
-
-        function validateFileType(file) {
-            var validTypes = new Set(['jpeg', 'jpg', 'webp', 'png', 'svg']);
-            var fileName = file.name;
-            let temp = fileName.split('.');
-            let ext = temp[temp.length - 1];
-            return validTypes.has(ext);
-        }
-
-
-        function validateAspectRatio(fileInput, expectedAspectRatio) {
-            return new Promise((resolve, reject) => {
-                const file = fileInput;
-
-                if (!file) {
-                    // No file selected
-                    resolve(false);
-                }
-
-                const reader = new FileReader();
-
-                reader.onload = function (event) {
-                    const image = new Image();
-
-                    image.onload = function () {
-                        const aspectRatio = image.width / image.height;
-                        // Compare the aspect ratio with the expected aspect ratio (e.g., 16:9)
-                        if (Math.abs(aspectRatio - expectedAspectRatio) > 0.01) {
-                            // Invalid aspect ratio
-                            resolve(false);
-                        } else {
-                            // Valid aspect ratio
-                            resolve(true);
-                        }
-                    };
-
-                    image.src = event.target.result;
-                };
-
-                reader.readAsDataURL(file);
-            });
-        }
-        class FileUploader {
-            constructor(_opt) {
-                let opt = { id: "", fileCount: 5, aspectRatio: 1, errorHandler: undefined, ..._opt }
-                this.elementId = opt.id;
-                this.files = [];
-                this.errorHandler = opt.errorHandler;
-                this.fileCount = opt.fileCount;
-                this.aspectRatio = opt.aspectRatio;
-                this.fileIp = document.querySelector(`#${opt.id}`);
-                this.input = this.fileIp.querySelector("#file-input");
-                this.btn = this.fileIp.querySelector("button");
-                this.label = this.fileIp.querySelector(".file-control-label");
-                this.previewElement = this.fileIp.querySelector(".image-preview");
-                this.fileIp.addEventListener("dragover", (e) => this.handleDragOver(e));
-                this.fileIp.addEventListener("dragleave", (e) => this.handleDragLeave(e));
-                this.fileIp.addEventListener("drop", (e) => this.handleDrop(e));
-                this.btn.type = "button";
-                this.btn.addEventListener("click", () => this.input.click());
-                this.input.addEventListener("change", (e) => this.handleFileSelect(e));
-                console.log("label_c > ", this.label);
-            }
-            getFile() {
-                return this.files;
-            }
-            handleFileSelect(e) {
-                this.handleFiles(e.target.files);
-                setTimeout(() => { e.target.value = null }, 1000)
-            }
-            handleDragOver(e) {
-                e.preventDefault();
-                this.label.innerHTML = "Drop";
-            }
-            handleDrop(e) {
-                e.preventDefault();
-                this.label.innerHTML = "Drag And Drop the files";
-                const files = e.dataTransfer.files;
-                this.handleFiles(files);
-            }
-            handleDragLeave(e) {
-                e.preventDefault();
-                //console.log("leave", label);
-                this.label.innerHTML = "Drag And Drop the files";
-            }
-            updatePreview() {
-                this.previewElement.innerHTML = "";
-                for (const file of this.files) {
-                    this.createFilePreview(file);
-                }
-            }
-            createFilePreview(file) {
-                console.log("file", file);
-                const previewImage = document.createElement("img");
-                previewImage.src = URL.createObjectURL(file.file);
-                previewImage.alt = file.name;
-                previewImage.style.width = "100%";
-                var parent = document.createElement("div");
-                parent.classList.add("image-item");
-                var deleteBtn = document.createElement('button')
-                deleteBtn.classList.add("delete-btn");
-                deleteBtn.innerHTML = "<i class='fa fa-trash'></i>";
-                deleteBtn.type = "button";
-                deleteBtn.addEventListener("click", () => this.deleteFile(file));
-                parent.appendChild(previewImage);
-                parent.appendChild(deleteBtn);
-                this.previewElement.appendChild(parent);
-            }
-            deleteFile(file) {
-                this.files = this.files.filter((f) => f.id !== file.id);
-                this.updatePreview();
-            }
-            async handleFiles(files) {
-                if (this.files.length >= this.fileCount || (this.files.length + files.length > this.fileCount)) {
-                    files = undefined;
-                    alert(`Only ${this.fileCount} files can be uploaded`);
-                    return;
-                }
-                for (const file of files) {
-                    let length = this.files.length;
-                    let validtype = validateFileType(file);
-                    let validshape = await validateAspectRatio(file, this.aspectRatio);
-                    if (validtype && validshape) {
-                        let f = { "name": file.name, file: file, id: length == 0 ? length + 1 : this.files[length - 1].id + 1 };
-                        this.files.push(f);
-                        this.createFilePreview(f);
-                    }
-                    else {
-                        if (!validtype) {
-                            if (!this.errorHandler)
-                                alert(`Please make sure that ${file.name} is image file.`);
-                            else
-                                this.errorHandler(`Please make sure that ${file.name} is image file.`)
-                        }
-                        else {
-                            if (!this.errorHandler)
-                                alert(`Please make sure that image file  have aspect ratio of ${this.aspectRatio}.`);
-                            else
-                                this.errorHandler(`Please make sure that image file  have aspect ratio of ${this.aspectRatio}.`)
-                        }
-                    }
-                }
-            }
-        }
-
-        var dragel = new FileUploader({ id: "file-uploader", fileCount: 4, aspectRatio: 1 });</script>
+        var dragel = new FileUploader({ id: "file-uploader", fileCount: 4, aspectRatio: 1, errorHandler: (msg) => swal("",msg , "error") });
+    </script>
 
     <script>
-    $(document).ready(function () {
-        $('#submitBtn').click(function (e) {
-            e.preventDefault(); // Prevent the default form submission behavior
-            const formObj = {
-                name: $("#Name").val(),
-                    description : $("#Description").val(),
-                    details : $("#Details").val(),
-                    highlights : $("#Highlights").val(),
-                    rating : $("#Rating").val(),
-                    color : $("#Color").val(),
-                    assemblyDetails : $("#AssemblyDetails").val(),
-                    quantity : $("#Quantity").val(),
-                    warranty : $("#Warranty").val(),
-                    packageDetails : $("#PackageDetails").val(),
-                    categoryId : $("#CategoryId").val(),
-                    subCategoryId : $("#SubCategoryId").val(),
-                    discount : $("#Discount").val(),
-                    discountType : $("#DiscountType").val(),
-                    dimensions : $("#Dimensions").val(),
-                    seatingCapacity : $("#SeatingCapacity").val(),
-            }
-            var formData = toFormData(formObj)
-            var imgs = dragel.getFile().map(x => x.file)
-            for (var i = 0; i < imgs.length; i++) {
-                formData.append("images", imgs[i])
-            }
 
-            console.log(formData, formObj)
-
-            // Make an Ajax request
-            $.ajax({
-                type: 'POST',
-                url: '@Url.Action("create", "Products")', // Replace with your controller and action names
-                data: formData,
-                processData: false, // Set this to false when using FormData
-                contentType: false, // Set this to false when using FormData
-                success: function (data) {
-                    // Handle the response from the server, if needed
-                    console.log(data);
-                    window.location.href = "/products"
-                },
-                error: function (errors) {
-                    // Handle any errors that occur during the Ajax request
-                    console.log('Error:', errors);
-                    for (var err in errors.responseJSON) {
-                        console
-                        $(`#${err}`).parent().append(`<span class="text-danger field-validation-error" data-valmsg-for="${err}" data-valmsg-replace="true"><span id="${err}-error" class="">${errors.responseJSON?.map(x => x)}</span></span>`)
-                    }
-
+        function submitFrom(){
+            return new Promise((resolve,reject)=>{
+                if (!$("#productForm").valid()) {
+                    reject()
+                };
+                const formObj = {
+                    name: $("#Name").val(),
+                    description: $("#Description").val(),
+                    details: $("#Details").val(),
+                    highlights: $("#Highlights").val(),
+                    rating: $("#Rating").val(),
+                    color: $("#Color").val(),
+                    assemblyDetails: $("#AssemblyDetails").val(),
+                    quantity: $("#Quantity").val(),
+                    warranty: $("#Warranty").val(),
+                    packageDetails: $("#PackageDetails").val(),
+                    categoryId: $("#CategoryId").val(),
+                    subCategoryId: $("#SubCategoryId").val(),
+                    discount: $("#Discount").val(),
+                    discountType: $("#DiscountType").val(),
+                    dimensions: $("#Dimensions").val(),
+                    seatingCapacity: $("#SeatingCapacity").val(),
                 }
-            });
-        });
-    });
+                var formData = toFormData(formObj)
+                var imgs = dragel.getFile().map(x => x.file)
+                for (var i = 0; i < imgs.length; i++) {
+                    formData.append("images", imgs[i])
+                }
+
+                console.log(formData, formObj)
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("create", "Products")', // Replace with your controller and action names
+                    data: formData,
+                    processData: false, // Set this to false when using FormData
+                    contentType: false, // Set this to false when using FormData
+                    success: function (data) {
+                        // Handle the response from the server, if needed
+                        console.log(data);
+                        window.location.href = "/products";
+                    },
+                    error: function (errors) {
+                        // Handle any errors that occur during the Ajax request
+                        console.log('Error:', errors);
+                        //for (var err in errors.responseJSON) {
+
+                        //    $(`#${err}`).parent().append(`<span class="text-danger field-validation-error" data-valmsg-for="${err}" data-valmsg-replace="true"><span id="${err}-error" class="">${errors.responseJSON[err]}</span></span>`)
+                        //}
+                        validator.showErrors(errors.responseJSON);
+                        reject();
+                    }
+                });
+            })
+        }
+        //$(document).ready(function () {
+           
+        //    $('#submitBtn').click(function (e) {
+        //        e.preventDefault(); // Prevent the default form submission behavior
+        //        if (!$("#productForm").valid()) return;
+        //        const formObj = {
+        //            name: $("#Name").val(),
+        //            description: $("#Description").val(),
+        //            details: $("#Details").val(),
+        //            highlights: $("#Highlights").val(),
+        //            rating: $("#Rating").val(),
+        //            color: $("#Color").val(),
+        //            assemblyDetails: $("#AssemblyDetails").val(),
+        //            quantity: $("#Quantity").val(),
+        //            warranty: $("#Warranty").val(),
+        //            packageDetails: $("#PackageDetails").val(),
+        //            categoryId: $("#CategoryId").val(),
+        //            subCategoryId: $("#SubCategoryId").val(),
+        //            discount: $("#Discount").val(),
+        //            discountType: $("#DiscountType").val(),
+        //            dimensions: $("#Dimensions").val(),
+        //            seatingCapacity: $("#SeatingCapacity").val(),
+        //        }
+        //        var formData = toFormData(formObj)
+        //        var imgs = dragel.getFile().map(x => x.file)
+        //        for (var i = 0; i < imgs.length; i++) {
+        //            formData.append("images", imgs[i])
+        //        }
+
+        //        console.log(formData, formObj)
+
+        //        // Make an Ajax request
+        //        $.ajax({
+        //            type: 'POST',
+        //            url: '@Url.Action("create", "Products")', // Replace with your controller and action names
+        //            data: formData,
+        //            processData: false, // Set this to false when using FormData
+        //            contentType: false, // Set this to false when using FormData
+        //            success: function (data) {
+        //                // Handle the response from the server, if needed
+        //                console.log(data);
+        //                window.location.href = "/products"
+        //            },
+        //            error: function (errors) {
+        //                // Handle any errors that occur during the Ajax request
+        //                console.log('Error:', errors);
+        //                //for (var err in errors.responseJSON) {
+
+        //                //    $(`#${err}`).parent().append(`<span class="text-danger field-validation-error" data-valmsg-for="${err}" data-valmsg-replace="true"><span id="${err}-error" class="">${errors.responseJSON[err]}</span></span>`)
+        //                //}
+        //                validator.showErrors(errors.responseJSON);
+        //            }
+        //        });
+        //    });
+        //});
 
 
         function toFormData(obj) {
@@ -374,7 +443,15 @@
             }
             return formData;
         }
-
+        function parseValue(val) {
+            if (val === 'true' || val === 'false') {
+                return val === 'true';
+            } else if (!isNaN(Number(val))) {
+                return Number(val);
+            } else {
+                return val;
+            }
+        }
     </script>
 
 
@@ -382,53 +459,36 @@
 @section Styles {
     <link href="~/lib/summernote-0.8.18-dist/summernote-bs4.min.css" rel="stylesheet" />
     <style>
-        .file-uploader-container {
-            padding: 5px;
-            height: 100%;
-            border: 2px dashed lightgray;
-            border-radius: 10px;
-            /* margin-bottom: 20px; */
+        .navigation-dots {
             display: flex;
-            flex-direction: column;
             justify-content: center;
-            align-items: center;
+            margin-top: 20px;
+        }
+        .step{
+            display:none;
+        }
+        .step.active{
+            display:block;
+        }
+        div:has(.dot) .step-navs{
+            display:flex;
+            align-items:end;
+        }
+        .dot {
+            width: 10px;
+            height: 10px;
+            display:block;
+            border-radius: 50%;
+            background-color: gray;
+            margin: 0 5px;
+            cursor: pointer;
         }
 
-        .file-controls {
-            position: relative;
-            top: 30px;
-            display: flex;
-            flex-direction: column;
-            width: 220px;
-            text-align: center;
+       .dot.active {
+            background-color: black;
         }
-
-        .file-uploader-container .image-preview {
-            position: absolute;
-            top: 9px;
-            left: 25px;
-            display: flex;
-            justify-content: flex-start;
-            gap: 20px;
-            width: 90%;
-        }
-
-        .file-uploader-container .image-item {
-            width: 70px;
-            position: relative;
-        }
-
-        .file-uploader-container .delete-btn {
-            border: 0px;
-            height: 20px;
-            width: 20px;
-            background: red;
-            color: white;
-            border-radius: 5px;
-            font-size: 10px;
-            position: absolute;
-            top: 0;
-            right: -5px;
+        .dot.error{
+            background-color:red;
         }
     </style>
 }

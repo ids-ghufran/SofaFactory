@@ -1,0 +1,245 @@
+﻿@model Domain.Models.Product
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Shop_Layout.cshtml";
+}
+
+<div class="container-fluid px-5 py-5">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title my-0">Add New Product</h4>
+        </div>
+        <div class="card-body">
+
+            <form asp-action="Create" id="productForm">
+                <div class="row">
+                    @*<div class="col-md-4">*@
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group col-md-7">
+                        <div class="mb-3">
+                            <label asp-for="Name" class="control-label"></label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label for="Description" class="control-label">Seo Description</label>
+                            <textarea asp-for="Description" class="form-control"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="file-uploader-container" id="file-uploader">
+                            <div class="image-preview"></div>
+                            <div class="file-controls">
+                                <input type="file" class="file-input d-none" id="file-input" />
+                                <h5 class="file-control-label">Drag And Drop the files</h5>
+                                <button class="btn btn-light border">Select File</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-7">
+                        <div class="mb-3">
+                            <label asp-for="Details" class="control-label"></label>
+                            <textarea rows="1" asp-for="Details" class="form-control"></textarea>
+                            <span asp-validation-for="Details" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Highlights" class="control-label"></label>
+                            <textarea asp-for="Highlights" class="form-control"></textarea>
+                            <span asp-validation-for="Highlights" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-5">
+                        <div class="form-group ">
+                            <label asp-for="CategoryId" class="control-label"></label>
+                            <select asp-for="CategoryId" class="form-control">
+                                <option>Select Category</option>
+                                @foreach (var cat in ViewBag.CategoryId)
+                                {
+                                    <option value="@cat.CategoryId">@cat?.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group ">
+                            <label asp-for="SubCategoryId" class="control-label"></label>
+                            <select asp-for="SubCategoryId" class="form-control">
+                                <option>Select Sub Category</option>
+                                @foreach (var cat in ViewBag.CategoryId)
+                                {
+                                    <option value="@cat.CategoryId">@cat?.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group ">
+                            <label asp-for="Discount" class="control-label"></label>
+                            <input asp-for="Discount" class="form-control" />
+
+                            <span asp-validation-for="Discount" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="DiscountType" class="control-label"></label>
+                            <select name="Discount" class="form-control" id="DiscountType">
+                                <option>Select Discount Type</option>
+                                <option value="1">Flat</option>
+                                <option value="2">Percent</option>
+                            </select>
+                            <span asp-validation-for="DiscountType" class="text-danger"></span>
+                        </div>
+
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label asp-for="Rating" class="control-label"></label>
+                        <input asp-for="Rating" class="form-control" />
+                        <span asp-validation-for="Rating" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label asp-for="Quantity" class="control-label"></label>
+                        <input asp-for="Quantity" class="form-control" />
+                        <span asp-validation-for="Quantity" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label asp-for="Dimensions" class="control-label"></label>
+                        <input asp-for="Dimensions" class="form-control" />
+                        <span asp-validation-for="Dimensions" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label asp-for="Color" class="control-label"></label>
+                        <input asp-for="Color" class="form-control" />
+                        <span asp-validation-for="Color" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label asp-for="Warranty" class="control-label"></label>
+                        <input asp-for="Warranty" class="form-control" />
+                        <span asp-validation-for="Warranty" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label asp-for="SeatingCapacity" class="control-label"></label>
+                        <input asp-for="SeatingCapacity" class="form-control" />
+                        <span asp-validation-for="SeatingCapacity" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label asp-for="AssemblyDetails" class="control-label"></label>
+                        <input asp-for="AssemblyDetails" class="form-control" />
+                        <span asp-validation-for="AssemblyDetails" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label asp-for="PackageDetails" class="control-label"></label>
+                        <input asp-for="PackageDetails" class="form-control" />
+                        <span asp-validation-for="PackageDetails" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <input id="submitBtn" type="button" value="Create" class="btn btn-primary" />
+
+                    </div>
+                </div>
+                @*</div>*@
+            </form>
+
+
+        </div>
+        <div class="card-footer">
+            <a asp-action="Index">Back to List</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        //await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/js/fileuploader.js"></script>
+    <script src="~/lib/summernote-0.8.18-dist/summernote-bs4.min.js"></script>
+    <script>
+        $('#Details').summernote({
+            placeholder: 'Add Product Details',
+            tabsize: 2,
+            height: 100
+        });
+        $('#Highlights').summernote({
+            placeholder: 'Add Product Highlights.',
+            tabsize: 2,
+            height: 100
+        });
+        var dragel = new FileUploader({ id: "file-uploader", fileCount: 4, aspectRatio: 1 });
+        </script>
+
+    <script>
+    $(document).ready(function () {
+      var validator=  $("#productForm").validate();
+        $('#submitBtn').click(function (e) {
+            e.preventDefault(); // Prevent the default form submission behavior
+                if (!$("#productForm").valid()) return;
+            const formObj = {
+                    name: $("#Name").val(),
+                    description : $("#Description").val(),
+                    details : $("#Details").val(),
+                    highlights : $("#Highlights").val(),
+                    rating : $("#Rating").val(),
+                    color : $("#Color").val(),
+                    assemblyDetails : $("#AssemblyDetails").val(),
+                    quantity : $("#Quantity").val(),
+                    warranty : $("#Warranty").val(),
+                    packageDetails : $("#PackageDetails").val(),
+                    categoryId : $("#CategoryId").val(),
+                    subCategoryId : $("#SubCategoryId").val(),
+                    discount : $("#Discount").val(),
+                    discountType : $("#DiscountType").val(),
+                    dimensions : $("#Dimensions").val(),
+                    seatingCapacity : $("#SeatingCapacity").val(),
+            }
+            var formData = toFormData(formObj)
+            var imgs = dragel.getFile().map(x => x.file)
+            for (var i = 0; i < imgs.length; i++) {
+                formData.append("images", imgs[i])
+            }
+
+            console.log(formData, formObj)
+
+            // Make an Ajax request
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("create", "Products")', // Replace with your controller and action names
+                data: formData,
+                processData: false, // Set this to false when using FormData
+                contentType: false, // Set this to false when using FormData
+                success: function (data) {
+                    // Handle the response from the server, if needed
+                    console.log(data);
+                    window.location.href = "/products"
+                },
+                error: function (errors) {
+                    // Handle any errors that occur during the Ajax request
+                    console.log('Error:', errors);
+                    //for (var err in errors.responseJSON) {
+                      
+                    //    $(`#${err}`).parent().append(`<span class="text-danger field-validation-error" data-valmsg-for="${err}" data-valmsg-replace="true"><span id="${err}-error" class="">${errors.responseJSON[err]}</span></span>`)
+                    //}
+                        validator.showErrors(errors.responseJSON);
+                }
+            });
+        });
+    });
+
+
+        function toFormData(obj) {
+            const formData = new FormData();
+            for (const key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    formData.append(key, obj[key]);
+                }
+            }
+            return formData;
+        }
+
+    </script>
+
+
+}
+@section Styles {
+    <link href="~/lib/summernote-0.8.18-dist/summernote-bs4.min.css" rel="stylesheet" />
+   
+}
