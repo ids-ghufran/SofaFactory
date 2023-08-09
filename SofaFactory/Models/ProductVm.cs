@@ -1,6 +1,7 @@
 ﻿using System;
 using Domain.Models;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.Build.Framework;
 
 namespace SofaFactory.Models
 {
@@ -14,6 +15,8 @@ namespace SofaFactory.Models
         public decimal Discount { get; set; }
         public DiscountType DiscountType { get; set; }
         public decimal Rating { get; set; }
+        [Required]
+        public decimal Price { get; set; }
         public int Quantity { get; set; }
         public string Dimensions { get; set; }
         public string Highlights { get; set; }

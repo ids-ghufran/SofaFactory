@@ -67,7 +67,12 @@ namespace SofaFactory.Controllers
         //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([FromForm] ProductVm modal)
         {
-
+            if (modal.Images==null|| modal.Images.Count < 1)
+            {
+                Response.StatusCode = 422;
+                ModelState.AddModelError("Images", "Please upload atleast one product image.");
+                return Json(ModelState.ToSerializedDictionary());
+            }
             var product = new Product
             {
                 Name = modal.Name,

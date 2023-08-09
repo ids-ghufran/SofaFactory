@@ -1,12 +1,47 @@
 ﻿@model IEnumerable<Domain.Models.Product>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Products";
     Layout = "~/Views/Shared/_Shop_Layout.cshtml";
 }
 
-<h1>Index</h1>
 
+<div class="container-fluid px-5 py-5">
+    <div class="row ">
+        <div class="col-md-3">
+
+        </div>
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-sm-6 col-md-6 col-lg-4">
+                    <div class="product-cards mb-2" data-id="fabric-rec-sofa-set" data-category="fabric 1-seater">
+                        <a href="./sinle-detail-recliner.html">
+                            <img class="card-img-top p-2" src="./assets/images/sofa-detail/SINGLE_SEATER_RECLINER.png" alt="Card image" style="width:100%">
+                        </a>
+                        <div class="card-body">
+                            <a class="sofa-sub-heads" href="./sinle-detail-recliner.html">Single Seater Recliner</a>
+                            <p class="sofa-sub-head my-2">
+                                <strong>₹ ₹</strong> &nbsp;&nbsp;
+                                <del>₹ 45.000.00</del> <strong class="text-success">&nbsp;&nbsp;57%</strong>
+                            </p>
+                            <p class="save-percent mb-1">You save ₹20000</p>
+                            <div class="checkout-rating mb-1">
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa-solid fa-star-half-stroke haif-unchecked"></span>
+                            </div>
+                            <a class="sofa-sub-head" href="">EMI from ₹1,583.00</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<h1>Index</h1>
+ 
 <p>
     <a asp-action="Create">Create New</a>
 </p>
