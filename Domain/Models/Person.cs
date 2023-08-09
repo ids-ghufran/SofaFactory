@@ -17,7 +17,7 @@ namespace Domain.Models
         public string? EmailAddress { get; set;}
         public string MobileNo { get; set; }
         public string UserImage { get; set;}    
-        public AppUser User { get; set; }
+        public AppUser? User { get; set; }
         public List<Address>? AddressList { get; set; }
     }
 }
