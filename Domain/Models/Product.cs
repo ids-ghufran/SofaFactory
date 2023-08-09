@@ -19,6 +19,7 @@ namespace Domain.Models
         public int SubCategoryId { get; set; }
         public decimal Discount { get; set; }
         public decimal Price { get; set; }
+        public decimal Emi { get; set; }
         public DiscountType DiscountType { get; set; }
         public decimal Rating { get; set; }
         public int Quantity { get; set; }

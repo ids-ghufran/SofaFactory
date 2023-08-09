@@ -17,6 +17,8 @@ namespace SofaFactory.Models
         public decimal Rating { get; set; }
         [Required]
         public decimal Price { get; set; }
+        [Required]
+        public decimal Emi { get; set; }
         public int Quantity { get; set; }
         public string Dimensions { get; set; }
         public string Highlights { get; set; }

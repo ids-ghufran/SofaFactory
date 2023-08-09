@@ -63,12 +63,19 @@
                                  </div>
                              </div>
                              </div>
-                               <div class="step ">
-                                   <div class="form-group mb-3">
-                                        <label asp-for="Price" class="control-label"></label>
-                                        <input asp-for="Price" data-rules="required:true,number:true" class="form-control" />
-                                        <span asp-validation-for="Price" class="text-danger"></span>
-                                   </div>
+                        <div class="step">
+                            <div class="form-group mb-3">
+                                <label asp-for="Price" class="control-label"></label>
+                                <input asp-for="Price" data-rules="required:true,number:true" class="form-control" />
+                                <span asp-validation-for="Price" class="text-danger"></span>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label asp-for="Emi" class="control-label"></label>
+                                <input asp-for="Emi" data-rules="required:true,number:true" class="form-control" />
+                                <span asp-validation-for="Emi" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="step">
                             <div class="form-group mb-3">
                                      <label asp-for="Discount" class="control-label"></label>
                                 <input asp-for="Discount" data-rules="required:true,number:true" class="form-control" />
@@ -212,19 +219,19 @@
                 validationRules[fieldName] = valObj;
             });
 
-            console.log('validation >' , validationRules);
+          //  console.log('validation >' , validationRules);
              validator = $("#productForm").validate({
                 rules:{
                     ...validationRules
                 }
             });
-
+            // added for fixing summernote editors error on validation
             $('form').each(function () {
                 if ($(this).data('validator'))
                     $(this).data('validator').settings.ignore = ".note-editor *";
             });
         });
-
+        // Next button click handler
         $('.next').click(function(){
         let self=this;
         let active_page= $('.dot.active').data('id');
@@ -271,6 +278,8 @@
         
        
         });
+
+        //previous button click handler
         $('.prev').click(function(){
             let self = this;
             let active_page = $('.dot.active').data('id');
@@ -383,63 +392,7 @@
                 });
             })
         }
-        //$(document).ready(function () {
-           
-        //    $('#submitBtn').click(function (e) {
-        //        e.preventDefault(); // Prevent the default form submission behavior
-        //        if (!$("#productForm").valid()) return;
-        //        const formObj = {
-        //            name: $("#Name").val(),
-        //            description: $("#Description").val(),
-        //            details: $("#Details").val(),
-        //            highlights: $("#Highlights").val(),
-        //            rating: $("#Rating").val(),
-        //            color: $("#Color").val(),
-        //            assemblyDetails: $("#AssemblyDetails").val(),
-        //            quantity: $("#Quantity").val(),
-        //            warranty: $("#Warranty").val(),
-        //            packageDetails: $("#PackageDetails").val(),
-        //            categoryId: $("#CategoryId").val(),
-        //            subCategoryId: $("#SubCategoryId").val(),
-        //            discount: $("#Discount").val(),
-        //            discountType: $("#DiscountType").val(),
-        //            dimensions: $("#Dimensions").val(),
-        //            seatingCapacity: $("#SeatingCapacity").val(),
-        //        }
-        //        var formData = toFormData(formObj)
-        //        var imgs = dragel.getFile().map(x => x.file)
-        //        for (var i = 0; i < imgs.length; i++) {
-        //            formData.append("images", imgs[i])
-        //        }
-
-        //        console.log(formData, formObj)
-
-        //        // Make an Ajax request
-        //        $.ajax({
-        //            type: 'POST',
-        //            url: '@Url.Action("create", "Products")', // Replace with your controller and action names
-        //            data: formData,
-        //            processData: false, // Set this to false when using FormData
-        //            contentType: false, // Set this to false when using FormData
-        //            success: function (data) {
-        //                // Handle the response from the server, if needed
-        //                console.log(data);
-        //                window.location.href = "/products"
-        //            },
-        //            error: function (errors) {
-        //                // Handle any errors that occur during the Ajax request
-        //                console.log('Error:', errors);
-        //                //for (var err in errors.responseJSON) {
-
-        //                //    $(`#${err}`).parent().append(`<span class="text-danger field-validation-error" data-valmsg-for="${err}" data-valmsg-replace="true"><span id="${err}-error" class="">${errors.responseJSON[err]}</span></span>`)
-        //                //}
-        //                validator.showErrors(errors.responseJSON);
-        //            }
-        //        });
-        //    });
-        //});
-
-
+    
         function toFormData(obj) {
             const formData = new FormData();
             for (const key in obj) {
