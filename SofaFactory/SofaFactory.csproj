@@ -27,9 +27,13 @@
   <ItemGroup>
     <Folder Include="wwwroot\assets\images\md-message\" />
     <Folder Include="Helper\" />
+    <Folder Include="Views\Account\" />
+    <Folder Include="Attribute\" />
   </ItemGroup>
 
   <ItemGroup>
     <None Remove="Helper\" />
+    <None Remove="Views\Account\" />
+    <None Remove="Attribute\" />
   </ItemGroup>
 </Project>
