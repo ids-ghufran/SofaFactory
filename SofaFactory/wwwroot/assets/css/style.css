@@ -748,6 +748,7 @@ label.material-text {
   -ms-overflow-style: none;  
   scrollbar-width: none; 
 }
+/*
 .pagination {
   display: flex;
   justify-content: end;
@@ -778,9 +779,17 @@ label.material-text {
 .pagination a:last-child {
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
+}*/
+.page-link {
+color:black;
 }
-/* --------------------stores------------------------------------------------------------------------------ */
-.objects {
+.pagination a.active {
+    background-color: #4CAF50;
+    color: white;
+    border: 1px solid #4CAF50;
+}
+    /* --------------------stores------------------------------------------------------------------------------ */
+    .objects {
   position: relative;
 }
 
