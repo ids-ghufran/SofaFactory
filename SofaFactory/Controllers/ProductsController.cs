@@ -10,6 +10,8 @@ using SofaFactory.Data;
 using System.Data.SqlTypes;
 using SofaFactory.Models;
 using SofaFactory.Helper;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace SofaFactory.Controllers
 {
@@ -25,12 +27,114 @@ namespace SofaFactory.Controllers
         }
 
         // GET: Products
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page=1,int pageLength=10,bool isJson=false, string? Materials=null,string? Sizes=null, string? StorageTypes = null, string? SeatingCapacities = null, string? query=null)
         {
-            var applicationDbContext = _context.Products.Include(p => p.Category).Include(p => p.CreatedBy).Include(p => p.SubCategory).Include(p => p.UpdatedBy);
-            return View(await applicationDbContext.ToListAsync());
+            var skip= (page-1<1?0:page-1)*pageLength;
+            var materials = Materials!=null? Materials.Split(",").ToList():null;
+            var sizes = Sizes!=null? Sizes.Split(",").ToList():null;
+            var storageTypes = StorageTypes != null ? StorageTypes.Split(",").ToList() : null;
+            var sc = SeatingCapacities != null ? SeatingCapacities.Split(",").ToList() : null;
+            ViewBag.QueryString = HttpContext.Request.QueryString.Value;
+            var applicationDbContext = _context.Products.AsQueryable();
+            if (query != null)
+            {
+                //query = query.Replace("+", " ");
+                applicationDbContext = applicationDbContext.Where(x => x.Name.Contains(query));
+            }
+            if(materials != null && materials.Count > 0)
+            {
+                applicationDbContext = applicationDbContext.Where(c => materials.Contains(c.Material.Label));
+            }
+            if (sizes != null && sizes.Count > 0)
+            {
+                applicationDbContext = applicationDbContext.Where(c => Sizes.Contains(c.Size.Label));
+            }
+            if (storageTypes != null && storageTypes.Count > 0)
+            {
+                applicationDbContext = applicationDbContext.Where(c => storageTypes.Contains(c.StorageType.Label));
+            }
+            if (sc != null && sc.Count > 0)
+            {
+                applicationDbContext = applicationDbContext.Where(c => sc.Contains(c.SeatingCapacity.Label));
+            }
+            
+            applicationDbContext = applicationDbContext.Include(p=>p.ProductImages).ThenInclude(p=>p.Image)
+                .Include(p => p.Category).Include(p => p.CreatedBy)
+                .Include(p => p.SubCategory).Include(p => p.UpdatedBy).Skip(skip).Take(pageLength);
+            var count = applicationDbContext.Count();
+            ViewBag.filters = new Filters()
+            {
+                Materials=_context.Materials.Select(x=>x.Label).ToList(),   
+                SeatingCapacities=_context.SeatingCapacities.Select(x=>x.Label).ToList(),
+                Sizes=_context.Sizes.Select(c=>c.Label).ToList(),
+                StorageTypes = _context.StorageTypes.Select(x=>x.Label).ToList(),
+            };
+            var pagemodel = new PaginationModel<Product>() { 
+            Model= await applicationDbContext.ToListAsync(),
+            Page=page,
+            PageLength=pageLength,
+            Count=count
+            };
+            if (!isJson)
+                return View(pagemodel);
+            else
+                return Json(pagemodel);
         }
+        [Route("/Products/category/{category}")]
+        public async Task<IActionResult> GetByCategory(int page = 1, int pageLength = 10, bool isJson = false, List<string>? Materials = null, List<string>? Sizes = null, List<string>? StorageTypes = null, List<string>? SeatingCapacities = null, string? query = null,string category=null)
+        {
+            if (category == null)
+            {
+                return RedirectToAction("Index");
+            }
+            var skip = (page - 1 < 1 ? 0 : page - 1) * pageLength;
 
+            var applicationDbContext = _context.Products.Where(c=>c.Category.Name==category).AsQueryable();
+            if (query != null)
+            {
+                query = query.Replace("+", " ");
+                applicationDbContext = applicationDbContext.Where(x => x.Name.Contains(query));
+            }
+            if (Materials != null && Materials.Count > 0)
+            {
+                applicationDbContext = applicationDbContext.Where(c => Materials.Contains(c.Material.Label));
+            }
+            if (Sizes != null && Sizes.Count > 0)
+            {
+                applicationDbContext = applicationDbContext.Where(c => Sizes.Contains(c.Size.Label));
+            }
+            if (StorageTypes != null && StorageTypes.Count > 0)
+            {
+                applicationDbContext = applicationDbContext.Where(c => StorageTypes.Contains(c.StorageType.Label));
+            }
+            if (SeatingCapacities != null && SeatingCapacities.Count > 0)
+            {
+                applicationDbContext = applicationDbContext.Where(c => SeatingCapacities.Contains(c.SeatingCapacity.Label));
+            }
+
+            applicationDbContext = applicationDbContext.Include(p => p.ProductImages).ThenInclude(p => p.Image)
+                .Include(p => p.Category).Include(p => p.CreatedBy)
+                .Include(p => p.SubCategory).Include(p => p.UpdatedBy).Skip(skip).Take(pageLength);
+            var count = _context.Products.Count();
+            ViewBag.filters = new Filters()
+            {
+                Materials = _context.Materials.Select(x => x.Label).ToList(),
+                SeatingCapacities = _context.SeatingCapacities.Select(x => x.Label).ToList(),
+                Sizes = _context.Sizes.Select(c => c.Label).ToList(),
+                StorageTypes = _context.StorageTypes.Select(x => x.Label).ToList(),
+            };
+            var pagemodel = new PaginationModel<Product>()
+            {
+                Model = await applicationDbContext.ToListAsync(),
+                Page = page,
+                PageLength = pageLength,
+                Count = count
+            };
+            if (!isJson)
+                return View("Index",pagemodel);
+            else
+                return Json(pagemodel);
+        }
         // GET: Products/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -57,6 +161,9 @@ namespace SofaFactory.Controllers
             //ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CreatedById");
             //ViewData["SubCategoryId"] = new SelectList(_context.Categories, "CategoryId", "CreatedById");
             ViewData["CategoryId"] = await _context.Categories.ToListAsync();
+            ViewData["SizeId"] = await _context.Sizes.ToListAsync();
+            ViewData["MaterialId"]=await _context.Materials.ToListAsync();
+            ViewData["StorageTypeId"] = await _context.StorageTypes.ToListAsync();
             return View();
         }
 
@@ -81,6 +188,8 @@ namespace SofaFactory.Controllers
                 CategoryId = modal.CategoryId,
                 SubCategoryId = modal.SubCategoryId,
                 Discount = modal.Discount,
+                Emi=modal.Emi,
+                Price=modal.Price,
                 DiscountType = modal.DiscountType,
                 Rating = modal.Rating,
                 Quantity = modal.Quantity,
@@ -88,7 +197,10 @@ namespace SofaFactory.Controllers
                 Highlights = modal.Highlights,
                 Color = modal.Color,
                 Warranty = modal.Warranty,
-                SeatingCapacity = modal.SeatingCapacity,
+                SeatingCapacityId = modal.SeatingCapacityId,
+                SizeId=modal.SizeId,
+                StorageTypeId=modal.StorageTypeId,
+                MaterialId=modal.MaterialId,
                 AssemblyDetails = modal.AssemblyDetails,
                 PackageDetails = modal.PackageDetails,
                 CreatedOn = DateTime.Now
@@ -101,7 +213,7 @@ namespace SofaFactory.Controllers
             _context.Add(product);
             await _context.SaveChangesAsync();
             var imgPath = Path.Combine(environment.WebRootPath, "assets", "images", "products");
-            if (modal.Images.Count < 0)
+            if (modal.Images.Count >0)
             {
                 var imgUrl = await FileHelper.SaveFilesAsync(modal.Images, imgPath);
                 var imgs = new List<ProductImage>();
