@@ -24,7 +24,10 @@ namespace SofaFactory.Models
         public string Highlights { get; set; }
         public string Color { get; set; }
         public int Warranty { get; set; }
-        public int SeatingCapacity { get; set; }
+        public int SeatingCapacityId { get; set; }
+        public int MaterialId { get; set; }
+        public int SizeId { get; set; }
+        public int StorageTypeId { get; set; }
         public string AssemblyDetails { get; set; }
         public string PackageDetails { get; set; }
         public List<IFormFile>? Images { get; set; }
