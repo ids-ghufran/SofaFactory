@@ -103,6 +103,54 @@
                                         <span asp-validation-for="Quantity" class="text-danger"></span>
                                    </div>
                                </div>
+                        <div class="step">
+                            <div class="form-group mb-3">
+                                <label for="SizeId" class="control-label">Size</label>
+                                <select asp-for="SizeId" data-rules="required:true" class="form-control" >
+                                    <option value="">Select Size</option>
+                                    @foreach (var cat in ViewBag.SizeId)
+                                    {
+                                        <option value="@cat.Id">@cat?.Label</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="SizeId" class="text-danger"></span>
+                            </div>
+                           @* <div class="form-group">
+                                <label for="MaterialId" class="control-label">Material</label>
+                                <select asp-for="MaterialId" data-rules="required:true" class="form-control" >
+                                    <option value="">Select MaterialId</option>
+                                    @foreach (var cat in ViewBag.MaterialId)
+                                    {
+                                        <option value="@cat.Id">@cat?.Label</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="MaterialId" class="text-danger"></span>
+                            </div>*@
+                        </div>
+                        <div class="step">
+                            <div class="form-group mb-3">
+                                <label for="StorageTypeId" class="control-label">Storage Type</label>
+                                <select asp-for="StorageTypeId" data-rules="required:true" class="form-control" >
+                                    <option value="">Select Storage Type</option>
+                                    @foreach (var cat in ViewBag.StorageTypeId)
+                                    {
+                                        <option value="@cat.Id">@cat?.Label</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="StorageTypeId" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="MaterialId" class="control-label">Material</label>
+                                <select asp-for="MaterialId" data-rules="required:true" class="form-control" >
+                                    <option value="">Select Material</option>
+                                    @foreach (var cat in ViewBag.MaterialId)
+                                    {
+                                        <option value="@cat.Id">@cat?.Label</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="MaterialId" class="text-danger"></span>
+                            </div>
+                        </div>
                                <div class="step">
                                    <div class="form-group mb-3">
                                         <label asp-for="Dimensions" class="control-label"></label>
@@ -122,9 +170,9 @@
                                     <span asp-validation-for="Warranty" class="text-danger"></span>
                                    </div>
                                    <div class="form-group">
-                                    <label asp-for="SeatingCapacity" class="control-label"></label>
-                                <input asp-for="SeatingCapacity" data-rules="required:true" class="form-control" />
-                                    <span asp-validation-for="SeatingCapacity" class="text-danger"></span>
+                                <label for="SeatingCapacityId" class="control-label">Seating Capacity</label>
+                                  <input asp-for="SeatingCapacityId" data-rules="required:true" class="form-control" />
+                                    <span asp-validation-for="SeatingCapacityId" class="text-danger"></span>
                                    </div>
                                </div> 
                                <div class="step">
@@ -347,6 +395,10 @@
                     details: $("#Details").val(),
                     highlights: $("#Highlights").val(),
                     price:$("#Price").val(),
+                    emi: $("#Emi").val(),
+                    sizeId:$("#SizeId").val(),
+                    storageTypeId:$("#StorageTypeId").val(),
+                    materialId:$("#MaterialId").val(),
                     rating: $("#Rating").val(),
                     color: $("#Color").val(),
                     assemblyDetails: $("#AssemblyDetails").val(),
@@ -358,7 +410,7 @@
                     discount: $("#Discount").val(),
                     discountType: $("#DiscountType").val(),
                     dimensions: $("#Dimensions").val(),
-                    seatingCapacity: $("#SeatingCapacity").val(),
+                    seatingCapacityId: $("#SeatingCapacityId").val(),
                 }
                 var formData = toFormData(formObj)
                 var imgs = dragel.getFile().map(x => x.file)
