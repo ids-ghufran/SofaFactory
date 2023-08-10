@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Security.Principal;
@@ -11,6 +12,8 @@ namespace Domain.Models
     public class Product:BaseEntity
     {
         public int ProductId { get; set; }
+        [Required]
+        public int MaterialId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string Details { get; set; }
@@ -27,16 +30,23 @@ namespace Domain.Models
         public string Highlights { get; set; }
         public string Color { get; set; }
         public int Warranty { get; set; }
-        public int SeatingCapacity { get; set; }
+        [Required]
+        public int SeatingCapacityId { get; set; }
+        public SeatingCapacity SeatingCapacity { get; set; }
         public string AssemblyDetails { get; set; }
         public string PackageDetails { get; set; }
+        public Material Material { get; set; }
         [NotMapped]
         public virtual List<Image>? Images { get; set; }
         public List<ProductImage>? ProductImages { get; set; }
         public Category? Category { get; set; }
         public Category? SubCategory { get; set; }
         public Brand? Brand { get; set; }
-    }
+        public int StorageTypeId { get; set; }
+        public StorageType StorageType { get; set; }
+        public int SizeId { get; set; }
+        public Size Size { get; set; }
+     }
   
     public enum DiscountType {
     Flat=1,

@@ -12,6 +12,7 @@ namespace SofaFactory.Data
             : base(options)
         {
         }
+        public DbSet<AppUser> AppUsers { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<Category> Categories { get; set; }
@@ -29,6 +30,10 @@ namespace SofaFactory.Data
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
 
+        public DbSet<Material> Materials { get; set; }
+        public DbSet<SeatingCapacity> SeatingCapacities { get; set; }
+        public DbSet<Size> Sizes { get; set; }
+        public DbSet<StorageType> StorageTypes { get; set; }
 
 
         //roles seeding

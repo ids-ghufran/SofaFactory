@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SofaFactory.Data;
 
@@ -11,9 +12,10 @@ using SofaFactory.Data;
 namespace SofaFactory.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230809115127_Options_added_to_product")]
+    partial class Options_added_to_product
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -668,7 +670,7 @@ namespace SofaFactory.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Sizes");
+                    b.ToTable("Size");
                 });
 
             modelBuilder.Entity("Domain.Models.State", b =>
@@ -707,7 +709,7 @@ namespace SofaFactory.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("StorageTypes");
+                    b.ToTable("StorageType");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -964,13 +966,13 @@ namespace SofaFactory.Migrations
                         {
                             Id = "4f6fede0-7e17-4c44-af0b-ad0b9c1c98fa",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "6a4cef5d-a959-428c-abd4-dc4515fab8ff",
+                            ConcurrencyStamp = "ce7da24d-cf06-4fcb-b76a-5a0ce89453e8",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEByGrjZDFb0Cs21+AmvT9+otiwLd4KdkF5H6mZfIj7hkXjPPbNCKRunmXEr6PPdvQg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEP59yon4DAuTy93B0qpovCgAAqsoO6nEdbYKXCSD3K4zUfdm9faoYM09ma1MQr2xmQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3b2d4aa0-1fef-4565-9415-8f97c9ab0eb7",
+                            SecurityStamp = "b4d88da6-445f-44ee-9214-c52f4b21a736",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         },
@@ -978,13 +980,13 @@ namespace SofaFactory.Migrations
                         {
                             Id = "3f67700c-232a-4bc1-b3b5-f8aef4630b1e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "815b5894-96cb-4420-8478-adcd2b52c90b",
+                            ConcurrencyStamp = "47e7e76e-5e6c-4715-8851-98199cc7565b",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "SUBADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEBjH87v0GItKCsTtHLqNngFusb4MpfqJyrYkuPwBEtsupw4lQJz8OlTmSBNkoFQIeQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEFR1EyzhNeHhl0uLrqcCqcNg8recxZI9Z7IIAR5vgpXNz699II7OK6SJzu6u/IjRQA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "690cd35e-73f6-4056-8c2f-2c2437a3b2c5",
+                            SecurityStamp = "e9e074f2-b4b0-4f92-9a20-a2a1db399007",
                             TwoFactorEnabled = false,
                             UserName = "subadmin"
                         });
