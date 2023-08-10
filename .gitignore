@@ -367,3 +367,6 @@ FodyWeavers.xsd
 
 #custom ignore files
 appsettings.json
+
+
+wwwroot/uploads
