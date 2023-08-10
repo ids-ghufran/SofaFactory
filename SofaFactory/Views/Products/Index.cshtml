@@ -1,185 +1,156 @@
-﻿@model IEnumerable<Domain.Models.Product>
-
+﻿@using SofaFactory.Helper;
+@model PaginationModel<Domain.Models.Product>
 @{
     ViewData["Title"] = "Products";
     Layout = "~/Views/Shared/_Shop_Layout.cshtml";
+    ViewBag.BreadcrumbTitle = "All Products";
+    ViewBag.PageTitle = "All Products";
+    var pages = Math.Ceiling((decimal)(Model.Count / Model.PageLength));
+    var formUrl = "/Products/index" +(string) ViewBag.QueryString;
 }
 
+<partial name="~/Views/Shared/_breadcrumb.cshtml" />
 
 <div class="container-fluid px-5 py-5">
+    
     <div class="row ">
         <div class="col-md-3">
+            <div class="scroll-div">
+                <div class="filter-sec mb-2">
+                    <h3>FILTERS</h3>
+                    <i class="fa fa-filter"></i>
+                </div>
+                <!-- filters Start   -->
 
+                <!-- Materials Start   -->
+                @if (ViewBag.filters.Materials.Count > 0)
+                {
+                    <h6 class="mb-4">Material</h6>
+                    @foreach (var m in ViewBag.filters.Materials)
+                    {
+                        <div >
+                            <input type="checkbox" name="Materials" data-name="Materials" value="@m" id="@m">
+                            <label class="material-text" for="@m"> @m</label>
+                        </div>
+                    }
+                    <hr>
+                }
+                <!--Materials End-->
+                <!-- SeatingCapacities Start   -->
+                @if (ViewBag.filters.SeatingCapacities.Count > 0)
+                {
+                    <h6 class="mb-4">Seating Capacity</h6>
+                    @foreach (var m in ViewBag.filters.SeatingCapacities)
+                    {
+                        <div>
+                            <input type="checkbox" name="SeatingCapacities" data-name="SeatingCapacities" value="@m" id="@m">
+                            <label class="material-text" for="@m"> @m</label>
+                        </div>
+                    }
+                    <hr>
+                }
+                <!--SeatingCapacities End-->
+                <!-- Sizes Start   -->
+                @if (ViewBag.filters.Sizes.Count > 0)
+                {
+                    <h6 class="mb-4">Size </h6>
+                    @foreach (var m in ViewBag.filters.Sizes)
+                    {
+                        <div>
+                            <input type="checkbox" name="Sizes" data-name="Sizes" value="@m" id="@m">
+                            <label class="material-text" for="@m"> @m</label>
+                        </div>
+                    }
+                    <hr>
+                }
+                <!--Sizes End-->
+                <!-- StorageTypes Start   -->
+                @if (ViewBag.filters.Sizes.Count > 0)
+                {
+                    <h6 class="mb-4">Storage Type </h6>
+                    @foreach (var m in ViewBag.filters.StorageTypes)
+                    {
+                        <div>
+                            <input type="checkbox" name="StorageTypes" data-name="StorageTypes" value="@m" id="@m">
+                            <label class="material-text" for="@m"> @m</label>
+                        </div>
+                    }
+                    <hr>
+                }
+                <!--StorageTypes End-->
+
+            </div>
         </div>
         <div class="col-md-9">
-            <div class="row">
-                <div class="col-sm-6 col-md-6 col-lg-4">
-                    <div class="product-cards mb-2" data-id="fabric-rec-sofa-set" data-category="fabric 1-seater">
-                        <a href="./sinle-detail-recliner.html">
-                            <img class="card-img-top p-2" src="./assets/images/sofa-detail/SINGLE_SEATER_RECLINER.png" alt="Card image" style="width:100%">
-                        </a>
-                        <div class="card-body">
-                            <a class="sofa-sub-heads" href="./sinle-detail-recliner.html">Single Seater Recliner</a>
-                            <p class="sofa-sub-head my-2">
-                                <strong>₹ ₹</strong> &nbsp;&nbsp;
-                                <del>₹ 45.000.00</del> <strong class="text-success">&nbsp;&nbsp;57%</strong>
-                            </p>
-                            <p class="save-percent mb-1">You save ₹20000</p>
-                            <div class="checkout-rating mb-1">
-                                <span class="fa fa-star checked"></span>
-                                <span class="fa fa-star checked"></span>
-                                <span class="fa fa-star checked"></span>
-                                <span class="fa fa-star checked"></span>
-                                <span class="fa-solid fa-star-half-stroke haif-unchecked"></span>
+            <div class=" mb-3 ">
+                <form action="@formUrl">
+                    <div class="row justify-content-end">
+                        <div class="col-md-5">
+                            <div class="form-group input-group  input-group-md">
+                                <input type="text" name="query" class="form-control" required placeholder="Search" />
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="submit">Search</button>
+                                </div>
                             </div>
-                            <a class="sofa-sub-head" href="">EMI from ₹1,583.00</a>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
+            <div class="row">
+                @foreach(var p in Model.Model)
+                {
+                    var discount = p.DiscountType == Domain.Models.DiscountType.Flat ? p.Discount : (p.Price / 100) * p.Discount;
+                    var amt = p.Price - (discount);
+                    var discountRate = discount * 100 / (p.Price);
+                    <div class="col-sm-6 col-md-6 col-lg-4">
+                        <div class="product-cards mb-2" data-id="fabric-rec-sofa-set" data-category="fabric 1-seater">
+                            <a href="/products/@p.ProductId">
+                                <img class="card-img-top p-2" src="@p.ProductImages.First().Image.Src" alt="Card image" style="width:100%">
+                            </a>
+                            <div class="card-body">
+                                <a class="sofa-sub-heads" href="./sinle-detail-recliner.html">@p.Name</a>
+                                <p class="sofa-sub-head my-2">
+                                    <strong>₹ @amt.ToString("0.00")</strong> &nbsp;&nbsp;
+                                    <del>₹ @p.Price.ToString("0.00")</del> <strong class="text-success">&nbsp;&nbsp;@discountRate %</strong>
+                                </p>
+                                <p class="save-percent mb-1">You save ₹@discount.ToString("0.00")</p>
+                                <div class="checkout-rating mb-1">
+                                    <span class="fa fa-star checked"></span>
+                                    <span class="fa fa-star checked"></span>
+                                    <span class="fa fa-star checked"></span>
+                                    <span class="fa fa-star checked"></span>
+                                    <span class="fa-solid fa-star-half-stroke haif-unchecked"></span>
+                                </div>
+                                <a class="sofa-sub-head" href="">EMI from ₹@p.Emi.ToString("0.00")</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            @if (pages > 1)
+            {
+                var prevUrl = "/Products/index"+ QueryStringHelper.UpdateQueryStringParameters(ViewBag.QueryString, new Dictionary<string, string>() { { "page", (Model.Page - 1).ToString() } });
+                var nextUrl = "/Products/index"+ QueryStringHelper.UpdateQueryStringParameters(ViewBag.QueryString, new Dictionary<string, string>() { { "page", (Model.Page + 1).ToString() } });
+                <div class="d-flex justify-content-end align-items-center">
+                    <ul class="pagination">
+                        <li class="page-item"><a class="page-link" href="@prevUrl"><i class="fa fa-angle-left"></i> </a></li>
+                        @for (var i = 1; i <= pages; i++)
+                        {
+                            var actve = Model.Page == i ? "active" : "";
+                            var pageUrl = "/Products/index" + QueryStringHelper.UpdateQueryStringParameters(ViewBag.QueryString, new Dictionary<string, string>() { { "page", (Model.Page + 1).ToString() } });
+                            <li class="page-item"><a class="page-link @actve" href="@pageUrl">@i</a></li>
+                        }
+
+                        <li class="page-item"><a class="page-link" href="@nextUrl"><i class="fa fa-angle-right"></i></a></li>
+                    </ul>
+                </div>
+            }
         </div>
     </div>
 </div>
-<h1>Index</h1>
- 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Details)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Discount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DiscountType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Rating)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Quantity)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Dimensions)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Highlights)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Color)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Warranty)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SeatingCapacity)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AssemblyDetails)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PackageDetails)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SubCategory)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedOn)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UpdatedOn)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedBy)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UpdatedBy)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Details)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Discount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DiscountType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Rating)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Quantity)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Dimensions)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Highlights)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Color)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Warranty)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SeatingCapacity)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AssemblyDetails)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PackageDetails)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category.CreatedById)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SubCategory.CreatedById)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedOn)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UpdatedOn)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedBy.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UpdatedBy.Id)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ProductId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ProductId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ProductId">Delete</a>
-            </td>
-        </tr>
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
-    </tbody>
-</table>
