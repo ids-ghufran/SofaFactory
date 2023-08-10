@@ -13,6 +13,7 @@ namespace SofaFactory.Models
         [MobileNo(ErrorMessage = "Please enter a valid Mobile No")]
 		public string MobileNo { get; set; }
 		[Required(ErrorMessage = "Please enter password")]
+        [MinLength(6, ErrorMessage = "Enter minimum 6 character password")]
 		public string Password { get; set; }
         [Required(ErrorMessage = "Please enter confirm password")]
         [Compare("Password", ErrorMessage = "Password and Confirm Password doesn't match")]

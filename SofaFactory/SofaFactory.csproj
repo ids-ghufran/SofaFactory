@@ -18,6 +18,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.15" />
+    <PackageReference Include="MailKit" Version="4.1.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,11 +30,15 @@
     <Folder Include="Helper\" />
     <Folder Include="Views\Account\" />
     <Folder Include="Attribute\" />
+    <Folder Include="Views\Shared\Partials\" />
+    <Folder Include="Services\" />
   </ItemGroup>
 
   <ItemGroup>
     <None Remove="Helper\" />
     <None Remove="Views\Account\" />
     <None Remove="Attribute\" />
+    <None Remove="Views\Shared\Partials\" />
+    <None Remove="Services\" />
   </ItemGroup>
 </Project>

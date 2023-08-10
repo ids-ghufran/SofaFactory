@@ -87,6 +87,10 @@
                 </div>
 
                 <ul class="links">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li><a href="#">@User.Identity.Name</a></li>
+                    }
                     <li><a href="/">Home</a></li>
                     <li><a href="./about.html">About</a></li>
 
@@ -120,6 +124,18 @@
                             &nbsp;&nbsp;  <i class="fa fa-envelope"></i>
                         </a>
                     </li>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+
+
+                        <li><a class="text-danger" asp-controller="Account" asp-action="Logout">Logout</a></li>
+                    }
+                    else
+                    {
+                        <li><a asp-controller="Account" asp-action="Login">Login</a></li>
+                        <li><a asp-controller="Account" asp-action="Register">Register</a></li>
+                    }
+
                 </ul>
 
             </aside>
