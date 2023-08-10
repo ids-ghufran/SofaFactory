@@ -29,8 +29,6 @@ namespace SofaFactory.Data
         public DbSet<Domain.Models.Image> Images { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
-        public DbSet<AppUser> AppUsers  { get; set; }
-
         public DbSet<Material> Materials { get; set; }
         public DbSet<SeatingCapacity> SeatingCapacities { get; set; }
         public DbSet<Size> Sizes { get; set; }
