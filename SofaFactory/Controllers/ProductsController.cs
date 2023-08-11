@@ -81,7 +81,7 @@ namespace SofaFactory.Controllers
                 return Json(pagemodel);
         }
         [Route("/Products/category/{category}")]
-        public async Task<IActionResult> GetByCategory(int page = 1, int pageLength = 10, bool isJson = false, List<string>? Materials = null, List<string>? Sizes = null, List<string>? StorageTypes = null, List<string>? SeatingCapacities = null, string? query = null,string category=null)
+        public async Task<IActionResult> GetByCategory(int page = 1, int pageLength = 10, bool isJson = false, List<string>? Materials = null, List<string>? Sizes = null, List<string>? StorageTypes = null, List<string>? SeatingCapacities = null, string? query = null,int? category=null)
         {
             if (category == null)
             {
@@ -89,7 +89,7 @@ namespace SofaFactory.Controllers
             }
             var skip = (page - 1 < 1 ? 0 : page - 1) * pageLength;
 
-            var applicationDbContext = _context.Products.Where(c=>c.Category.Name==category).AsQueryable();
+            var applicationDbContext = _context.Products.Where(c=>c.Category.CategoryId==category).AsQueryable();
             if (query != null)
             {
                 query = query.Replace("+", " ");
