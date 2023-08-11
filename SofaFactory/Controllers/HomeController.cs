@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SofaFactory.Data;
 using SofaFactory.Models;
 using System.Diagnostics;
 
@@ -7,15 +9,18 @@ namespace SofaFactory.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ApplicationDbContext context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
         {
             _logger = logger;
+            this.context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var cats = await context.Categories.Include(x => x.Image).Take(7).ToListAsync();
+            return View(cats);
         }
 
         public IActionResult Privacy()
