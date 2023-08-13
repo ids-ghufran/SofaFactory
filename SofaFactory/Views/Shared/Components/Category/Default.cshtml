@@ -1,0 +1,9 @@
+﻿@model List<Domain.Models.Category>
+
+<ul class="dropdown-menu">
+    @foreach(var cat in Model)
+    {
+        var name = Uri.EscapeDataString(cat.Name);
+             <li><a href="/Products/category/@name">@cat.Name</a></li>
+    }  
+</ul>

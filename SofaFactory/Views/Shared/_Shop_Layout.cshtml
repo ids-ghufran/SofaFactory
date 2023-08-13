@@ -1,4 +1,6 @@
-﻿@{
+﻿@using SofaFactory.Helper;
+
+@{
     ViewBag.MetaData = !string.IsNullOrEmpty(ViewBag.MetaData) ? ViewBag.MetaData : "Looking for comfortable and stylish furniture? Look no further than Sofa Factory! Our wide selection of sofas, recliners, dining tables, and more will have you feeling like a king or queen.";
     ViewBag.Keywords = !string.IsNullOrEmpty(ViewBag.Keywords) ? ViewBag.Keywords : "Sofa,Recliner, Dining Table,Bed,Center Table,Antique Chair,Rocking Chair";
     ViewBag.BreadcrumbTitle = !string.IsNullOrEmpty(ViewBag.BreadcrumbTitle) ? ViewBag.BreadcrumbTitle : "";
@@ -95,13 +97,13 @@
                     <li><a href="./about.html">About</a></li>
 
                     <li class="dropdown">
-                        <a href="/" class="dropdown-toggle"
+                        <a href="/Products" class="dropdown-toggle"
                            data-toggle="dropdown" role="button"
                            aria-haspopup="true" aria-expanded="false">
                             All
                             Products <span class="caret"></span>
                         </a>
-                        <ul class="dropdown-menu">
+                       @* <ul class="dropdown-menu">
                             <li><a href="./sofa.html">Sofa</a></li>
                             <li><a href="./recliner.html">Recliner</a></li>
                             <li><a href="./dining.html">Dining Table</a></li>
@@ -110,7 +112,8 @@
                             <li><a href="./antique-chair.html">Antique Chair</a></li>
                             <li><a href="./relaxing.html">Rocking Chair</a></li>
                             <li><a href="#"> Customization</a></li>
-                        </ul>
+                        </ul>*@
+                        @await Component.InvokeAsync("Category")
                     </li>
 
                     <li><a href="#category-page">Our Category</a></li>
