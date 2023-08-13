@@ -30,47 +30,31 @@ namespace SofaFactory.Controllers
         public async Task<IActionResult> Index(int page=1,int pageLength=10,bool isJson=false, string? Materials=null,string? Sizes=null, string? StorageTypes = null, string? SeatingCapacities = null, string? query=null)
         {
             var skip= (page-1<1?0:page-1)*pageLength;
-            var materials = Materials!=null? Materials.Split(",").ToList():null;
-            var sizes = Sizes!=null? Sizes.Split(",").ToList():null;
-            var storageTypes = StorageTypes != null ? StorageTypes.Split(",").ToList() : null;
-            var sc = SeatingCapacities != null ? SeatingCapacities.Split(",").ToList() : null;
-            ViewBag.QueryString = HttpContext.Request.QueryString.Value;
+            var materials = Materials!=null? Uri.UnescapeDataString( Materials).Split(",").ToList():new List<string>();
+            var sizes = Sizes!=null? Uri.UnescapeDataString(Sizes).Split(",").ToList(): new List<string>();
+            var storageTypes = StorageTypes != null ? Uri.UnescapeDataString(StorageTypes).Split(",").ToList() : new List<string>();
+            var sc = SeatingCapacities != null ? Uri.UnescapeDataString(SeatingCapacities).Split(",").ToList() : new List<string>();
+            ViewBag.Materials = materials;
+            ViewBag.Sizes = sizes;
+            ViewBag.StorageTypes = storageTypes;
+            ViewBag.SeatingCapacities = sc;
+            ViewBag.Method = "Index";
+            SetViewBag();
             var applicationDbContext = _context.Products.AsQueryable();
             if (query != null)
             {
                 //query = query.Replace("+", " ");
-                applicationDbContext = applicationDbContext.Where(x => x.Name.Contains(query));
+                applicationDbContext = queryProduct(applicationDbContext, query);
             }
-            if(materials != null && materials.Count > 0)
-            {
-                applicationDbContext = applicationDbContext.Where(c => materials.Contains(c.Material.Label));
-            }
-            if (sizes != null && sizes.Count > 0)
-            {
-                applicationDbContext = applicationDbContext.Where(c => Sizes.Contains(c.Size.Label));
-            }
-            if (storageTypes != null && storageTypes.Count > 0)
-            {
-                applicationDbContext = applicationDbContext.Where(c => storageTypes.Contains(c.StorageType.Label));
-            }
-            if (sc != null && sc.Count > 0)
-            {
-                applicationDbContext = applicationDbContext.Where(c => sc.Contains(c.SeatingCapacity.Label));
-            }
+            applicationDbContext = FilterQuery(applicationDbContext, materials, sizes, storageTypes, sc);
             
             applicationDbContext = applicationDbContext.Include(p=>p.ProductImages).ThenInclude(p=>p.Image)
                 .Include(p => p.Category).Include(p => p.CreatedBy)
-                .Include(p => p.SubCategory).Include(p => p.UpdatedBy).Skip(skip).Take(pageLength);
+                .Include(p => p.SubCategory).Include(p => p.UpdatedBy);
+           
             var count = applicationDbContext.Count();
-            ViewBag.filters = new Filters()
-            {
-                Materials=_context.Materials.Select(x=>x.Label).ToList(),   
-                SeatingCapacities=_context.SeatingCapacities.Select(x=>x.Label).ToList(),
-                Sizes=_context.Sizes.Select(c=>c.Label).ToList(),
-                StorageTypes = _context.StorageTypes.Select(x=>x.Label).ToList(),
-            };
             var pagemodel = new PaginationModel<Product>() { 
-            Model= await applicationDbContext.ToListAsync(),
+            Model=await Paginate(applicationDbContext, page,pageLength).ToListAsync(),
             Page=page,
             PageLength=pageLength,
             Count=count
@@ -78,54 +62,43 @@ namespace SofaFactory.Controllers
             if (!isJson)
                 return View(pagemodel);
             else
+            {
+                HttpContext.Response.StatusCode = 200;
                 return Json(pagemodel);
+            }
         }
         [Route("/Products/category/{category}")]
-        public async Task<IActionResult> GetByCategory(int page = 1, int pageLength = 10, bool isJson = false, List<string>? Materials = null, List<string>? Sizes = null, List<string>? StorageTypes = null, List<string>? SeatingCapacities = null, string? query = null,int? category=null)
+        public async Task<IActionResult> GetByCategory(int page = 1, int pageLength = 10, bool isJson = false, string? Materials = null, string? Sizes = null, string? StorageTypes = null, string? SeatingCapacities = null, string? query = null,string? category=null)
         {
             if (category == null)
             {
                 return RedirectToAction("Index");
             }
-            var skip = (page - 1 < 1 ? 0 : page - 1) * pageLength;
-
-            var applicationDbContext = _context.Products.Where(c=>c.Category.CategoryId==category).AsQueryable();
+            category=Uri.UnescapeDataString(category);
+            var materials = Materials != null ? Uri.UnescapeDataString(Materials).Split(",").ToList() : new List<string>();
+            var sizes = Sizes != null ? Uri.UnescapeDataString(Sizes).Split(",").ToList() : new List<string>();
+            var storageTypes = StorageTypes != null ? Uri.UnescapeDataString(StorageTypes).Split(",").ToList() : new List<string>();
+            var sc = SeatingCapacities != null ? Uri.UnescapeDataString(SeatingCapacities).Split(",").ToList() : new List<string>();
+            ViewBag.Materials = materials;
+            ViewBag.Sizes = sizes;
+            ViewBag.StorageTypes = storageTypes;
+            ViewBag.SeatingCapacities = sc;
+            ViewBag.Method = "Index";
+            var applicationDbContext = _context.Products.Where(c=>c.Category.Name==category).AsQueryable();
             if (query != null)
             {
-                query = query.Replace("+", " ");
-                applicationDbContext = applicationDbContext.Where(x => x.Name.Contains(query));
+                //query = query.Replace("+", " ");
+                applicationDbContext = queryProduct(applicationDbContext, query);
             }
-            if (Materials != null && Materials.Count > 0)
-            {
-                applicationDbContext = applicationDbContext.Where(c => Materials.Contains(c.Material.Label));
-            }
-            if (Sizes != null && Sizes.Count > 0)
-            {
-                applicationDbContext = applicationDbContext.Where(c => Sizes.Contains(c.Size.Label));
-            }
-            if (StorageTypes != null && StorageTypes.Count > 0)
-            {
-                applicationDbContext = applicationDbContext.Where(c => StorageTypes.Contains(c.StorageType.Label));
-            }
-            if (SeatingCapacities != null && SeatingCapacities.Count > 0)
-            {
-                applicationDbContext = applicationDbContext.Where(c => SeatingCapacities.Contains(c.SeatingCapacity.Label));
-            }
-
+            applicationDbContext = FilterQuery(applicationDbContext, materials, sizes, storageTypes, sc);
             applicationDbContext = applicationDbContext.Include(p => p.ProductImages).ThenInclude(p => p.Image)
                 .Include(p => p.Category).Include(p => p.CreatedBy)
-                .Include(p => p.SubCategory).Include(p => p.UpdatedBy).Skip(skip).Take(pageLength);
-            var count = _context.Products.Count();
-            ViewBag.filters = new Filters()
-            {
-                Materials = _context.Materials.Select(x => x.Label).ToList(),
-                SeatingCapacities = _context.SeatingCapacities.Select(x => x.Label).ToList(),
-                Sizes = _context.Sizes.Select(c => c.Label).ToList(),
-                StorageTypes = _context.StorageTypes.Select(x => x.Label).ToList(),
-            };
+                .Include(p => p.SubCategory).Include(p => p.UpdatedBy);
+            var count = applicationDbContext.Count();
+            SetViewBag();
             var pagemodel = new PaginationModel<Product>()
             {
-                Model = await applicationDbContext.ToListAsync(),
+                Model = await Paginate(applicationDbContext,page,pageLength)   .ToListAsync(),
                 Page = page,
                 PageLength = pageLength,
                 Count = count
@@ -145,7 +118,9 @@ namespace SofaFactory.Controllers
 
             var product = await _context.Products
                 .Include(p => p.Category)
-                .Include(p => p.SubCategory)
+                .Include(p => p.ProductImages).ThenInclude(p => p.Image)
+               .Include(p => p.CreatedBy)
+                .Include(p => p.SubCategory).Include(p => p.UpdatedBy)
                 .FirstOrDefaultAsync(m => m.ProductId == id);
             if (product == null)
             {
@@ -347,6 +322,53 @@ namespace SofaFactory.Controllers
         private bool ProductExists(int id)
         {
           return (_context.Products?.Any(e => e.ProductId == id)).GetValueOrDefault();
+        }
+        private IQueryable<Product> Paginate(IQueryable<Product> product,  int page, int pageSize)
+        {
+            var skip = (page - 1 < 1 ? 0 : page - 1) * pageSize;
+            return product.Skip(skip).Take(pageSize);
+        }
+        private IQueryable<Product> FilterQuery(IQueryable<Product> applicationDbContext, IList<string> Materials, IList<string> Sizes, IList<string> StorageTypes, IList<string> SeatingCapacities)
+        {
+           
+            if (Materials != null && Materials.Count > 0)
+            {
+                applicationDbContext = applicationDbContext.Where(c => Materials.Contains(c.Material.Label));
+            }
+            if (Sizes != null && Sizes.Count > 0)
+            {
+                applicationDbContext = applicationDbContext.Where(c => Sizes.Contains(c.Size.Label));
+            }
+            if (StorageTypes != null && StorageTypes.Count > 0)
+            {
+                applicationDbContext = applicationDbContext.Where(c => StorageTypes.Contains(c.StorageType.Label));
+            }
+            if (SeatingCapacities != null && SeatingCapacities.Count > 0)
+            {
+                applicationDbContext = applicationDbContext.Where(c => SeatingCapacities.Contains(c.SeatingCapacity.Label));
+            }
+            return applicationDbContext;
+        }
+        private IQueryable<Product> queryProduct( IQueryable<Product> applicationDbContext, string?query)
+        {
+            if (query != null)
+            {
+                query = Uri.UnescapeDataString(query);
+                applicationDbContext = applicationDbContext.Where(x => x.Name.Contains(query));
+            }
+            return applicationDbContext;
+        }
+        private void SetViewBag()
+        {
+            
+            ViewBag.QueryString = HttpContext.Request.QueryString.Value;
+            ViewBag.filters = new Filters()
+            {
+                Materials = _context.Materials.Select(x => x.Label).ToList(),
+                SeatingCapacities = _context.SeatingCapacities.Select(x => x.Label).ToList(),
+                Sizes = _context.Sizes.Select(c => c.Label).ToList(),
+                StorageTypes = _context.StorageTypes.Select(x => x.Label).ToList(),
+            };
         }
     }
 }

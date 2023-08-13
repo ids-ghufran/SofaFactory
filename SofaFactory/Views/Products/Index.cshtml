@@ -1,12 +1,15 @@
-﻿@using SofaFactory.Helper;
-@model PaginationModel<Domain.Models.Product>
+﻿@model PaginationModel<Domain.Models.Product>
+@using SofaFactory.Helper;
 @{
     ViewData["Title"] = "Products";
     Layout = "~/Views/Shared/_Shop_Layout.cshtml";
     ViewBag.BreadcrumbTitle = "All Products";
     ViewBag.PageTitle = "All Products";
+    var method = ViewBag.Method == "Index" ? "Index" : "category";
+    var path = "/Products/" + method;
     var pages = Math.Ceiling((decimal)(Model.Count / Model.PageLength));
-    var formUrl = "/Products/index" +(string) ViewBag.QueryString;
+    var formUrl = path +(string) ViewBag.QueryString;
+    var ch= "";
 }
 
 <partial name="~/Views/Shared/_breadcrumb.cshtml" />
@@ -21,59 +24,71 @@
                     <i class="fa fa-filter"></i>
                 </div>
                 <!-- filters Start   -->
-
+              
                 <!-- Materials Start   -->
                 @if (ViewBag.filters.Materials.Count > 0)
                 {
                     <h6 class="mb-4">Material</h6>
-                    @foreach (var m in ViewBag.filters.Materials)
+                    foreach (var ma in ViewBag.filters.Materials)
                     {
-                        <div >
-                            <input type="checkbox" name="Materials" data-name="Materials" value="@m" id="@m">
-                            <label class="material-text" for="@m"> @m</label>
+                        ch = (ViewBag.Materials.Contains(ma) ? "checked" : "");
+
+                        <div>
+                            <input type="checkbox" name="Materials" data-name="Materials" @ch value="@ma" id="@ma">
+                            <label class="material-text" for="@ma"> @ma</label>
                         </div>
+                        ch = "";
                     }
                     <hr>
                 }
+
+
                 <!--Materials End-->
                 <!-- SeatingCapacities Start   -->
-                @if (ViewBag.filters.SeatingCapacities.Count > 0)
+                @if(ViewBag.filters.SeatingCapacities.Count > 0)
                 {
                     <h6 class="mb-4">Seating Capacity</h6>
-                    @foreach (var m in ViewBag.filters.SeatingCapacities)
+                    @foreach(var m in ViewBag.filters.SeatingCapacities)
                     {
+                        ch = ViewBag.SeatingCapacities.Contains(m) ? "checked" : "";
                         <div>
-                            <input type="checkbox" name="SeatingCapacities" data-name="SeatingCapacities" value="@m" id="@m">
+                            <input type="checkbox" name="SeatingCapacities" @ch data-name="SeatingCapacities" value="@m" id="@m">
                             <label class="material-text" for="@m"> @m</label>
                         </div>
+                        ch = "";
                     }
                     <hr>
                 }
                 <!--SeatingCapacities End-->
                 <!-- Sizes Start   -->
-                @if (ViewBag.filters.Sizes.Count > 0)
+                @if(ViewBag.filters.Sizes.Count > 0)
                 {
                     <h6 class="mb-4">Size </h6>
-                    @foreach (var m in ViewBag.filters.Sizes)
+                    @foreach(var m in ViewBag.filters.Sizes)
                     {
+                        ch = ViewBag.Sizes.Contains(m) ? "checked" : "";
                         <div>
-                            <input type="checkbox" name="Sizes" data-name="Sizes" value="@m" id="@m">
+                            <input type="checkbox" name="Sizes" @ch data-name="Sizes" value="@m" id="@m">
                             <label class="material-text" for="@m"> @m</label>
                         </div>
+                        ch = "";
+
                     }
                     <hr>
                 }
                 <!--Sizes End-->
                 <!-- StorageTypes Start   -->
-                @if (ViewBag.filters.Sizes.Count > 0)
+                @if(ViewBag.filters.StorageTypes.Count > 0)
                 {
                     <h6 class="mb-4">Storage Type </h6>
-                    @foreach (var m in ViewBag.filters.StorageTypes)
+                    @foreach(var m in ViewBag.filters.StorageTypes)
                     {
+                        ch = ViewBag.StorageTypes.Contains(m) ? "checked" : "";
                         <div>
-                            <input type="checkbox" name="StorageTypes" data-name="StorageTypes" value="@m" id="@m">
+                            <input type="checkbox" @ch name="StorageTypes" data-name="StorageTypes" value="@m" id="@m">
                             <label class="material-text" for="@m"> @m</label>
                         </div>
+                        ch = "";
                     }
                     <hr>
                 }
@@ -84,8 +99,17 @@
         <div class="col-md-9">
             <div class=" mb-3 ">
                 <form action="@formUrl">
-                    <div class="row justify-content-end">
-                        <div class="col-md-5">
+                    <div class="row ">
+                        @if(User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("SubAdmin")))
+                        {
+                            <div class="col-md-6">
+                                <a class="btn btn-outline-primary" href="/Products/create">Add Product</a>
+                            </div>
+                        }else{
+                        <div class="col-md-6"></div>
+                        }
+
+                        <div class="col-md-6 d-flex justify-content-end">
                             <div class="form-group input-group  input-group-md">
                                 <input type="text" name="query" class="form-control" required placeholder="Search" />
                                 <div class="input-group-append">
@@ -104,7 +128,7 @@
                     var discountRate = discount * 100 / (p.Price);
                     <div class="col-sm-6 col-md-6 col-lg-4">
                         <div class="product-cards mb-2" data-id="fabric-rec-sofa-set" data-category="fabric 1-seater">
-                            <a href="/products/@p.ProductId">
+                            <a href="/Products/Details/@p.ProductId">
                                 <img class="card-img-top p-2" src="@p.ProductImages.First().Image.Src" alt="Card image" style="width:100%">
                             </a>
                             <div class="card-body">
@@ -128,17 +152,17 @@
                 }
             </div>
 
-            @if (pages > 1)
+            @if(pages > 1)
             {
-                var prevUrl = "/Products/index"+ QueryStringHelper.UpdateQueryStringParameters(ViewBag.QueryString, new Dictionary<string, string>() { { "page", (Model.Page - 1).ToString() } });
-                var nextUrl = "/Products/index"+ QueryStringHelper.UpdateQueryStringParameters(ViewBag.QueryString, new Dictionary<string, string>() { { "page", (Model.Page + 1).ToString() } });
+                var prevUrl = path+ QueryStringHelper.UpdateQueryStringParameters(ViewBag.QueryString, new Dictionary<string, string>() { { "page", (Model.Page - 1).ToString() } });
+                var nextUrl = path+ QueryStringHelper.UpdateQueryStringParameters(ViewBag.QueryString, new Dictionary<string, string>() { { "page", (Model.Page + 1).ToString() } });
                 <div class="d-flex justify-content-end align-items-center">
                     <ul class="pagination">
                         <li class="page-item"><a class="page-link" href="@prevUrl"><i class="fa fa-angle-left"></i> </a></li>
-                        @for (var i = 1; i <= pages; i++)
+                        @for(var i = 1; i <= pages; i++)
                         {
                             var actve = Model.Page == i ? "active" : "";
-                            var pageUrl = "/Products/index" + QueryStringHelper.UpdateQueryStringParameters(ViewBag.QueryString, new Dictionary<string, string>() { { "page", (Model.Page + 1).ToString() } });
+                            var pageUrl = path + QueryStringHelper.UpdateQueryStringParameters(ViewBag.QueryString, new Dictionary<string, string>() { { "page", (Model.Page + 1).ToString() } });
                             <li class="page-item"><a class="page-link @actve" href="@pageUrl">@i</a></li>
                         }
 
@@ -153,4 +177,84 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        var filters= {
+            Materials:[],
+            SeatingCapacities:[],
+            Sizes:[],
+            StorageTypes:[],
+            isJson:true
+        }
+        let method= "@method";
+        $(document).ready(()=>{
+            $("input[type='checkbox']").on('change',function(){
+               console.log("checked >", $(this).prop("checked"));
+               let self=this;
+               let checkedIp=Array.from( $("input[type='checkbox']:checked"));
+               let fltrs={
+                    Materials: [],
+                    SeatingCapacities: [],
+                    Sizes: [],
+                    StorageTypes: [],
+               };
+               checkedIp.map((val,i)=>{
+                    let name = $(val).data("name");
+                    let data = encodeURIComponent($(val).val());
+                    fltrs[name].push(data);
+               });
+                //let name = $(this).data("name");
+                //let value = encodeURIComponent($(this).val());
+               
+                 let newFilters= {...fltrs};
+                 let cn=0;
+                 let url = updateQueryStringParams(window.location.href,newFilters);
+                 console.log("url ", url);
+                 url= "https://"+url;
+                 window.location.href=url;
+               
+                //if(cn>0)
+                  //  url = url + '&isJson=true';
+                //$.ajax({
+                //    url:url,               
+                //    success:function(data){
+                //    console.log("filters : " ,newFilters);
+                //    console.log("data :" , data)
+                //    },
+                //    error:function(error){
+                //        console.log("error : ",error);
+                //    }
+                //})
+            });
+            //-----on event end
+        });
+
+        function updateQueryStringParams(url_i, newParams) {
+            const url = new URL(url_i);
+            const queryParams = new URLSearchParams(url.search);
+
+            // Update query string parameters
+            for (const [param, value] of Object.entries(newParams)) {
+                value.length > 0 ? queryParams.set(param, value) : queryParams.delete(param);
+            }
+
+            url.search = queryParams.toString();
+            let pathname = window.location.pathname.replaceAll("/","") == "Products" ? "/Products/Index":window.location.pathname;
+            // Return the updated URL path with query string
+            return window.location.host + pathname+ url.search;
+        }
+        function extractURLComponents(url) {
+            const parser = document.createElement('a');
+            parser.href = url;
+
+            const host = parser.host;
+            const pathname = parser.pathname;
+            const queryString = parser.search;
+
+            return {
+                host: host,
+                pathname: pathname,
+                queryString: queryString
+            };
+        }
+    </script>
 }
