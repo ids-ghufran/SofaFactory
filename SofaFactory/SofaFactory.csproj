@@ -11,7 +11,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.11" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.20" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.20" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.20">
       <PrivateAssets>all</PrivateAssets>
@@ -27,7 +27,6 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\assets\images\md-message\" />
-    <Folder Include="Helper\" />
     <Folder Include="Views\Account\" />
     <Folder Include="Attribute\" />
     <Folder Include="Views\Shared\Partials\" />
