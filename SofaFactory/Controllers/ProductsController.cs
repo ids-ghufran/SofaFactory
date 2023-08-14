@@ -119,7 +119,8 @@ namespace SofaFactory.Controllers
             var product = await _context.Products
                 .Include(p => p.Category)
                 .Include(p => p.ProductImages).ThenInclude(p => p.Image)
-               .Include(p => p.CreatedBy)
+               .Include(p => p.CreatedBy).Include(c=>c.Brand).Include(c=>c.Material).Include(c=>c.SeatingCapacity)
+               .Include(v=>v.StorageType).Include(c=>c.Size)
                 .Include(p => p.SubCategory).Include(p => p.UpdatedBy)
                 .FirstOrDefaultAsync(m => m.ProductId == id);
             if (product == null)
@@ -199,7 +200,7 @@ namespace SofaFactory.Controllers
                     {
                         Image = new Image
                         {
-                            Src = imgUrl[0],
+                            Src = imgUrl[i],
                             Alt = "Product Image",
                             CreatedOn = DateTime.Now
                         },
