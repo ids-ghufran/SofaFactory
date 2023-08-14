@@ -132,7 +132,7 @@
                                 <img class="card-img-top p-2" src="@p.ProductImages.First().Image.Src" alt="Card image" style="width:100%">
                             </a>
                             <div class="card-body">
-                                <a class="sofa-sub-heads" href="./sinle-detail-recliner.html">@p.Name</a>
+                                <a class="sofa-sub-heads" href="/Products/Details/@p.ProductId">@p.Name</a>
                                 <p class="sofa-sub-head my-2">
                                     <strong>₹ @amt.ToString("0.00")</strong> &nbsp;&nbsp;
                                     <del>₹ @p.Price.ToString("0.00")</del> <strong class="text-success">&nbsp;&nbsp;@discountRate %</strong>
