@@ -49,7 +49,7 @@
         <div class="col-sm-6 col-md-6 col-lg-3">
             <div class="cards">
                 <div class="img-wrapper">
-                    <a href="/products/category/@cat.CategoryId">
+                    <a href="/products/category/@Uri.EscapeDataString(cat.Name)">
                         <img src="@cat.Image?.Src"
                              class="pro-image"
                              alt="@cat.Image?.Alt">
