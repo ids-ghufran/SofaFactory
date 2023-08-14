@@ -92,7 +92,7 @@ namespace SofaFactory.Controllers
             }
             applicationDbContext = FilterQuery(applicationDbContext, materials, sizes, storageTypes, sc);
             applicationDbContext = applicationDbContext.Include(p => p.ProductImages).ThenInclude(p => p.Image)
-                .Include(p => p.Category).Include(p => p.CreatedBy)
+                .Include(p => p.Category).Include(p => p.CreatedBy).Include(c=>c.Shape)
                 .Include(p => p.SubCategory).Include(p => p.UpdatedBy);
             var count = applicationDbContext.Count();
             SetViewBag();
@@ -120,7 +120,7 @@ namespace SofaFactory.Controllers
                 .Include(p => p.Category)
                 .Include(p => p.ProductImages).ThenInclude(p => p.Image)
                .Include(p => p.CreatedBy).Include(c=>c.Brand).Include(c=>c.Material).Include(c=>c.SeatingCapacity)
-               .Include(v=>v.StorageType).Include(c=>c.Size)
+               .Include(v=>v.StorageType).Include(c=>c.Size).Include(c=>c.Shape)
                 .Include(p => p.SubCategory).Include(p => p.UpdatedBy)
                 .FirstOrDefaultAsync(m => m.ProductId == id);
             if (product == null)
@@ -142,6 +142,7 @@ namespace SofaFactory.Controllers
             ViewData["StorageTypeId"] = await _context.StorageTypes.ToListAsync();
             ViewData["SeatingCapacity"] = await _context.SeatingCapacities.ToListAsync();
             ViewData["Brands"] = await _context.Brands.ToListAsync();
+            ViewData["Shapes"] = await _context.Shapes.ToListAsync();
             return View();
         }
 
@@ -177,6 +178,8 @@ namespace SofaFactory.Controllers
                 Warranty = modal.Warranty,
                 SeatingCapacityId = modal.SeatingCapacityId,
                 SizeId=modal.SizeId,
+                ShapeId=modal.ShapeId,
+                BrandId=modal.BrandId,
                 StorageTypeId=modal.StorageTypeId,
                 MaterialId=modal.MaterialId,
                 AssemblyDetails = modal.AssemblyDetails,

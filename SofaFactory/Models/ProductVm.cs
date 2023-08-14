@@ -27,6 +27,8 @@ namespace SofaFactory.Models
         public int SeatingCapacityId { get; set; }
         public int MaterialId { get; set; }
         public int SizeId { get; set; }
+        public int ShapeId { get; set; }
+        public int BrandId { get; set; }
         public int StorageTypeId { get; set; }
         public string AssemblyDetails { get; set; }
         public string PackageDetails { get; set; }

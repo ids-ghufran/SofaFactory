@@ -26,4 +26,9 @@ namespace Domain.Models
         public int Id { get; set;}  
         public string Label { get; set; }
     }
+    public class Shape
+    {
+        public int Id { get; set; }
+        public string Label { get; set; }
+    }
 }

@@ -169,12 +169,24 @@
                                 <input asp-for="Warranty" data-rules="required:true, number:true" class="form-control" />
                                     <span asp-validation-for="Warranty" class="text-danger"></span>
                                    </div>
-                                   <div class="form-group">
+                                   <div class="form-group mb-3">
                                 <label for="SeatingCapacityId" class="control-label">Seating Capacity</label>
                                   @*<input asp-for="SeatingCapacityId" data-rules="required:true" class="form-control" />*@
                                 <select asp-for="SeatingCapacityId" data-rules="required:true" class="form-control">
                                     <option value="">Select Seating Capacity</option>
                                     @foreach (var cat in ViewBag.SeatingCapacity)
+                                    {
+                                        <option value="@cat.Id">@cat?.Label</option>
+                                    }
+                                </select>
+                                    <span asp-validation-for="SeatingCapacityId" class="text-danger"></span>
+                                   </div>
+                                   <div class="form-group mb-3">
+                                <label for="ShapeId" class="control-label">Shape</label>
+                                  @*<input asp-for="SeatingCapacityId" data-rules="required:true" class="form-control" />*@
+                                <select asp-for="ShapeId" data-rules="required:true" class="form-control">
+                                    <option value="">Select Shape</option>
+                                    @foreach (var cat in ViewBag.Shapes)
                                     {
                                         <option value="@cat.Id">@cat?.Label</option>
                                     }
@@ -404,6 +416,8 @@
                     price:$("#Price").val(),
                     emi: $("#Emi").val(),
                     sizeId:$("#SizeId").val(),
+                    shapeId:$("#ShapeId").val(),
+                    brandId:$("#BrandId").val(),
                     storageTypeId:$("#StorageTypeId").val(),
                     materialId:$("#MaterialId").val(),
                     rating: $("#Rating").val(),

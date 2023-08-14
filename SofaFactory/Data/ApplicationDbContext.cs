@@ -32,6 +32,7 @@ namespace SofaFactory.Data
         public DbSet<Material> Materials { get; set; }
         public DbSet<SeatingCapacity> SeatingCapacities { get; set; }
         public DbSet<Size> Sizes { get; set; }
+        public DbSet<Shape> Shapes { get; set; }
         public DbSet<StorageType> StorageTypes { get; set; }
         public DbSet<Slider> Slider { get; set; }
 

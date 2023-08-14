@@ -14,6 +14,7 @@ namespace Domain.Models
         public int ProductId { get; set; }
         [Required]
         public int MaterialId { get; set; }
+        public int ShapeId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string Details { get; set; }
@@ -47,6 +48,7 @@ namespace Domain.Models
         public StorageType StorageType { get; set; }
         public int SizeId { get; set; }
         public Size Size { get; set; }
+        public Shape Shape { get; set; }
      }
   
     public enum DiscountType {
