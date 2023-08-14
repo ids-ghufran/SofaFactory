@@ -140,6 +140,8 @@ namespace SofaFactory.Controllers
             ViewData["SizeId"] = await _context.Sizes.ToListAsync();
             ViewData["MaterialId"]=await _context.Materials.ToListAsync();
             ViewData["StorageTypeId"] = await _context.StorageTypes.ToListAsync();
+            ViewData["SeatingCapacity"] = await _context.SeatingCapacities.ToListAsync();
+            ViewData["Brands"] = await _context.Brands.ToListAsync();
             return View();
         }
 

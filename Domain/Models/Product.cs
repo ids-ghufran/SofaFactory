@@ -18,6 +18,7 @@ namespace Domain.Models
         public string Description { get; set; }
         public string Details { get; set; }
         public int CategoryId { get; set; }
+        public int BrandId { get; set; }
         [ForeignKey("SubCategory")]
         public int SubCategoryId { get; set; }
         public decimal Discount { get; set; }
