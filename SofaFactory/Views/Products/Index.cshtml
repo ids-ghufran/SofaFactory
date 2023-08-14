@@ -127,7 +127,7 @@
                     var amt = p.Price - (discount);
                     var discountRate = discount * 100 / (p.Price);
                     <div class="col-sm-6 col-md-6 col-lg-4">
-                        <div class="product-cards mb-2" data-id="fabric-rec-sofa-set" data-category="fabric 1-seater">
+                        <div class="product-cards mb-2 position-relative" data-id="fabric-rec-sofa-set" data-category="fabric 1-seater">
                             <a href="/Products/Details/@p.ProductId">
                                 <img class="card-img-top p-2" src="@p.ProductImages.First().Image.Src" alt="Card image" style="width:100%">
                             </a>
@@ -147,6 +147,19 @@
                                 </div>
                                 <a class="sofa-sub-head" href="">EMI from ₹@p.Emi.ToString("0.00")</a>
                             </div>
+                            
+                            @if(User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("SubAdmin")))
+                            {
+                                <div class="w-100 d-flex justify-content-end" style="position:absolute;top:10px;right:10px">
+                                    <a class="btn btn-sm btn-info mx-2" href="/Products/Edit/@p.ProductId"><i class="fa fa-pencil"></i></a>
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                    <a class="btn btn-sm btn-danger" href="/Products/Delete/@p.ProductId"><i class="fa fa-trash"></i></a>     
+                                    }
+                                </div>
+                            }
+
+                          
                         </div>
                     </div>
                 }
