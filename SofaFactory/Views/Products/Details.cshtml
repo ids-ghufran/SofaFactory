@@ -1,139 +1,423 @@
-﻿@model Domain.Models.Product
-
+﻿@using Microsoft.EntityFrameworkCore;
+@model Domain.Models.Product
+@inject SofaFactory.Data.ApplicationDbContext _context
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Shop_Layout.cshtml";
+    ViewBag.Title = "| Products | " + Model.Name;
 }
 
-<h1>Details</h1>
+<div class="container-fluid mt-5 mb-5">
+    <div class="row d-md-pl-0 pl-lg-5">
+        <div class="col-md-5 card mt-3">
+            @{
+                var index = 1;
+            }
 
-<div>
-    <h4>Product</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Details)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Details)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Discount)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Discount)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DiscountType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DiscountType)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Rating)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Rating)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Quantity)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Quantity)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Dimensions)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Dimensions)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Highlights)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Highlights)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Color)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Color)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Warranty)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Warranty)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.SeatingCapacity)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.SeatingCapacity)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AssemblyDetails)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AssemblyDetails)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PackageDetails)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PackageDetails)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Category)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Category.CreatedById)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.SubCategory)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.SubCategory.CreatedById)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedOn)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedOn)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UpdatedOn)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UpdatedOn)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedBy)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedBy.Id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UpdatedBy)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UpdatedBy.Id)
-        </dd>
-    </dl>
+            <div class="product-detail-page">
+                <div id='lens'></div>
+
+                <div id='slideshow-items-container'>
+                    @foreach(var im in Model.ProductImages)
+                    {
+                        var active = index == 1 ? "active" : "";
+                        <img class='slideshow-items @active mt-3' src='@im.Image.Src' />
+                        index++;
+                    }
+                   
+                </div>
+
+                <div class='row pl-5 mt-3'>
+                    @{
+                        index = 1;
+                    }
+                       @foreach(var im in Model.ProductImages)
+                    {
+                        var active = index == 1 ? "active" : "";
+                        <img class='slideshow-thumbnails @active' src='@im.Image.Src' />
+                        index++;
+                    }
+                </div>
+            </div>
+            <!-- ------ -->
+            <div id='result'></div>
+            <!-- ------ -->
+            <div class="row mt-5">
+                <div class="col-md-4">
+                    <div class="number pr-5 mb-3">
+                        <span class="minus">-</span>
+                        <input class="add-to-cart-val" type="text" value="1" />
+                        <span class="plus">+</span>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-2">
+                    <div>
+                        <button class="btn btn-outline-success buy-now-pro">ADD TO CART</button>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-2">
+                    <div>
+                        <button class="btn btn-outline-success buy-now-pro">BUY NOW</button></a>
+                    </div>
+                </div>
+
+            </div>
+            <!-- --- -->
+
+        </div>
+
+
+        <div class="col-md-7 pl-4">
+            <div class="scroll-div">
+
+                <div class="p-detail-title mt-3">
+                    <h5 class="detail-heading  mb-0  ">@Model.Name </h5>
+                    <div class="checkout-rating  py-2">
+
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa-solid fa-star-half-stroke haif-unchecked"></span>
+
+                    </div>
+                    @{
+                        var discount = Model.DiscountType == Domain.Models.DiscountType.Flat ? Model.Discount : (Model.Price / 100) * Model.Discount;
+                        var amt = Model.Price - (discount);
+                        var discountRate = discount * 100 / (Model.Price);
+                    }
+                    <p class="sofa-sub-head my-2">
+                        <strong>₹ @amt </strong> &nbsp;&nbsp;
+                        <del>₹ @Model.Price </del>&nbsp; <strong class="text-success">@discountRate %</strong>
+                    </p>
+
+
+                </div>
+                <p class="my-3"></p>
+                <!--
+                <div class="row">
+                    <div class="col-md-12 mt-3">
+                        <div class="about-icon">
+                            <ul class="about-ul">
+                                <li class="about-icons-link">
+                                    <a href=""><i class="fa-brands fa-facebook-f fb-icon"></i></i></a>
+                                </li>
+                                <li class="about-icons-link">
+                                    <a href=""><i class="fa-brands fa-instagram insta-icon"></i></a>
+                                </li>
+                                <li class="about-icons-link">
+                                    <a href=""><i class="fa-brands fa-whatsapp whats-app-icon"></i></i></a>
+                                </li>
+                                <li class="about-icons-link">
+                                    <a href=""><i class="fa-brands fa-twitter twitter-icon"></i></a>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- --------------------------------- -->
+                <div class="row py-3">
+                    <div class="col-md-12">
+
+                        <div class="p-display-size">
+                            <strong>Highlights</strong>
+
+                            <div class="service-check d-flex justify-content-start w-100  ">
+
+                               @Html.Raw(Model.Highlights)
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+                <!--   <div class="row py-3">
+                       <div class="col-md-12">
+                           <div class="p-discription mb-2 d-flex">
+                               <strong>Description</strong>
+                               <p class="discription-text pl-5">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis necessitatibus repellat facere quasi maiores culpa, repellendus ut animi natus excepturi nulla dignissimos consequuntur architecto perferendis facilis dicta dolores optio odio?</p>
+                           </div>
+
+                       </div>
+                   </div>-->
+                <!-- ----------------------------------------------- -->
+                <div class="row specification py-4">
+                    <div class="col-md-12">
+                        <div class="specification-heading">
+                            <h4 class="detail-heading">Product features</h4>
+                            <hr class="mt-4 px-0">
+                        </div>
+
+                        <div class="p-discription mb-3 d-flex">
+                            <p class="contain-heading"><strong>Dimensions</strong></p>
+                            <p class="pl-5">@Model.Dimensions</p>
+                        </div>
+
+                        <div class="p-discription mb-3 d-flex">
+                            <p class="contain-heading"><strong>Colour</strong></p>
+                            <p class="pl-5">@Model.Color</p>
+                        </div>
+                        <div class="p-discription mb-3 d-flex">
+                            <p class="contain-heading"><strong>Brand</strong></p>
+                            <p class="pl-5">@Model.Brand.BrandName</p>
+                        </div>
+
+                        <div class="p-discription mb-3 d-flex">
+                            <p class="contain-heading"><strong>Warranty</strong></p>
+                            <p class="pl-5">@Model.Warranty Month</p>
+                        </div>
+
+                        <div class="p-discription mb-3 d-flex">
+                            <p class="contain-heading"><strong>Assembly Details</strong></p>
+                            <p class="pl-5">@Model.AssemblyDetails</p>
+                        </div>
+
+                        <div class="p-discription mb-3 d-flex">
+                            <p class="contain-heading"><strong>Package Details</strong></p>
+                            <p class="pl-5">@Model.PackageDetails</p>
+                        </div>
+
+                        <div class="p-discription mb-3 d-flex">
+                            <p class="contain-heading"><strong>Material</strong> </p>
+                            <p class="pl-5">@Model.Material.Label</p>
+                        </div>
+
+                        <div class="p-discription mb-3 d-flex">
+                            <p class="contain-heading"><strong>SubCategory</strong></p>
+                            <p class="pl-5">@Model.SubCategory.Name</p>
+                        </div>
+
+                        <div class="p-discription mb-3 d-flex">
+                            <p class="contain-heading"><strong>Seating capacity</strong></p>
+                            <p class="pl-5">@Model.SeatingCapacity.Label</p>
+                        </div>
+
+                        <div class="p-discription mb-3 d-flex">
+                            <p class="contain-heading"><strong>Shape</strong></p>
+                            <p class="pl-5">@Model.Size.Label</p>
+                        </div>
+
+
+                    </div>
+
+
+
+
+                </div>
+                <!-- ------------more info----------- -->
+                <div class="add-more-info">
+                    <h5 class="detail-heading mb-2">More Info</h5>
+                   @* <ul class="more-info-sec">
+                        <li class="more-info-li">3 + 2 seater sofa made from high quality Leather.</li>
+                        <li class="more-info-li">Inner frame made up of best quality saal wood with alternate plywood.</li>
+                        <li class="more-info-li">Ergonomically designed sofa with enhanced seating comfort.</li>
+                        <li class="more-info-li">Elastic seat belt webbing + pocket spring with high density relaxwell foam for Enhanced  <br> &nbsp;  &nbsp; &nbsp;Seating comfort.</li>
+                        <li class="more-info-li">Good ground clearance for easy cleaning below the sofa.</li>
+                        <li class="more-info-li">Free from toxins and harmful chemicals like formaldehyde and AZO dye.</li>
+                        <li class="more-info-li">The Warranty covers  manufacturing  workmanship and material defects that occur during <br> &nbsp; &nbsp; &nbsp; the warranty period.</li>
+                    </ul>*@
+                    @Html.Raw(Model.Details)
+                </div>
+
+            </div>
+            <!-- ----------- -->
+        </div>
+    </div>
 </div>
-<div>
+
+@{
+    var relatedProducts = _context.Products.Where(c => c.Category.Name == Model.Category.Name).Include(c => c.ProductImages)
+            .ThenInclude(c => c.Image).ToList();
+}
+
+@if (relatedProducts.Count > 0)
+{
+    <hr />
+<div class="container  mt-5 mb-5">
+    <h3 class="h-customer-head">Related Products</h3>
+    <div class="heading_line"><span></span></div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="all-product-detail-sliders owl-carousel owl-theme pt-4">
+                    @foreach( var p in relatedProducts)
+                    {
+                        discount = p.DiscountType == Domain.Models.DiscountType.Flat ? p.Discount : (p.Price / 100) * p.Discount;
+                         amt = p.Price - (discount);
+                         discountRate = discount * 100 / (p.Price);
+                        <div class="related-cards mb-2">
+                            <a href="/Products/Details/@p.ProductId"><img class="card-img-top p-2" src="@p.ProductImages.First().Image.Src" alt="Card image" style="width:100%"></a>
+                            <div class="card-body">
+                                <a class="sofa-sub-heads" href="/Products/Details/@p.ProductId">@p.Name</a>
+                                <p class="sofa-sub-head my-2">
+                                    <strong>₹ @amt</strong> &nbsp;&nbsp;
+                                    <del>₹ @p.Price</del> <strong class="text-success">&nbsp;&nbsp;@discountRate %</strong>
+                                </p>
+                                <div class="checkout-rating mb-1">
+                                    <span class="fa fa-star checked"></span>
+                                    <span class="fa fa-star checked"></span>
+                                    <span class="fa fa-star checked"></span>
+                                    <span class="fa fa-star checked"></span>
+                                    <span class="fa-solid fa-star-half-stroke haif-unchecked"></span>
+                                </div>
+                                <a class="sofa-sub-head" href="">EMI Available <!--from ₹4,083.00--></a>
+                            </div>
+                        </div>
+                    }
+                </div>
+        </div>
+    </div>
+</div>
+}
+
+@{
+    var cats = _context.Categories.Include(c=>c.Image).ToList();
+}
+
+@if(cats.Count>0){
+    <div class="container mb-5 my-5 ">
+        <h3 class="h-customer-head">All Products</h3>
+        <div class="row">
+            <div class="col-md-12 px-md-0">
+                <div class="product-detail-sliders owl-carousel owl-theme
+                        pt-4">
+
+                    @foreach(var c in cats)
+                    {
+                        <div class="cards">
+                            <div class="img-wrapper">
+                                <a href="/Products/category/@Uri.EscapeDataString(c.Name)">
+                                    <img src="@c.Image.Src"
+                                 class="Card image" style="width:100%"
+                                 alt="@c.Name">
+                                </a>
+                                <h3 class="our-pro-1 pl-5">@c.Name</h3>
+                            </div>
+                        </div>
+
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@*<div>
     <a asp-action="Edit" asp-route-id="@Model?.ProductId">Edit</a> |
     <a asp-action="Index">Back to List</a>
-</div>
+</div>*@
+@section Scripts{
+        <script>
+                $(document).ready(function () {
+
+                    $('.slideshow-thumbnails').hover(function () { changeSlide($(this)); });
+
+                    $(document).mousemove(function (e) {
+                        var x = e.clientX; var y = e.clientY;
+
+                        var x = e.clientX; var y = e.clientY;
+
+                        var imgx1 = $('.slideshow-items.active').offset().left;
+                        var imgx2 = $('.slideshow-items.active').outerWidth() + imgx1;
+                        var imgy1 = $('.slideshow-items.active').offset().top;
+                        var imgy2 = $('.slideshow-items.active').outerHeight() + imgy1;
+
+                        if (x > imgx1 && x < imgx2 && y > imgy1 && y < imgy2) {
+                            $('#lens').show(); $('#result').show();
+                            imageZoom($('.slideshow-items.active'), $('#result'), $('#lens'));
+                        } else {
+                            $('#lens').hide(); $('#result').hide();
+                        }
+
+                    });
+
+                });
+
+                function imageZoom(img, result, lens) {
+
+                    result.width(img.innerWidth()); result.height(img.innerHeight());
+                    lens.width(img.innerWidth() / 2); lens.height(img.innerHeight() / 2);
+                   
+                    result.offset({ top: img.offset().top, left: img.offset().left + img.outerWidth() + 10 });
+
+                    var cx = img.innerWidth() / lens.innerWidth(); var cy = img.innerHeight() / lens.innerHeight();
+            let url = img.attr("src").replaceAll("\\","/");
+                    result.css('backgroundImage', `url(${url})`);
+            //console.log("img", `url(${img.attr("src")})`)
+                    result.css('backgroundSize', img.width() * cx + 'px ' + img.height() * cy + 'px');
+
+                    lens.mousemove(function (e) { moveLens(e); });
+                    img.mousemove(function (e) { moveLens(e); });
+                    lens.on('touchmove', function () { moveLens(); })
+                    img.on('touchmove', function () { moveLens(); })
+
+                    function moveLens(e) {
+                        var x = e.clientX - lens.outerWidth() / 2;
+                        var y = e.clientY - lens.outerHeight() / 2;
+                        if (x > img.outerWidth() + img.offset().left - lens.outerWidth()) { x = img.outerWidth() + img.offset().left - lens.outerWidth(); }
+                        if (x < img.offset().left) { x = img.offset().left; }
+                        if (y > img.outerHeight() + img.offset().top - lens.outerHeight()) { y = img.outerHeight() + img.offset().top - lens.outerHeight(); }
+                        if (y < img.offset().top) { y = img.offset().top; }
+                        lens.offset({ top: y, left: x });
+                        result.css('backgroundPosition', '-' + (x - img.offset().left) * cx + 'px -' + (y - img.offset().top) * cy + 'px');
+                    }
+                }
+
+
+                function changeSlide(elm) {
+                    $('.slideshow-items').removeClass('active');
+                    $('.slideshow-items').eq(elm.index()).addClass('active');
+                    $('.slideshow-thumbnails').removeClass('active');
+                    $('.slideshow-thumbnails').eq(elm.index()).addClass('active');
+                }
+
+            </script>
+    <script>
+        $('.all-product-detail-sliders').owlCarousel({
+            loop: true,
+            margin: 10,
+            nav: true,
+            autoplay: true,
+            autoplayTimeout: 4000,
+            responsive: {
+                0: {
+                    items: 1
+                },
+                600: {
+                    items: 3
+                },
+                1000: {
+                    items: 4
+                }
+            }
+        })
+    </script>
+
+
+             <script>
+            $('.product-detail-sliders').owlCarousel({
+                loop: true,
+                margin: 10,
+                nav: true,
+                autoplay: true,
+                autoplayTimeout: 2000,
+                autoplayHoverPause: true,
+                responsive: {
+                    0: {
+                        items: 1
+                    },
+                    600: {
+                        items: 3
+                    },
+                    1000: {
+                        items: 5
+                    }
+                }
+            })
+        </script>
+       
+}
