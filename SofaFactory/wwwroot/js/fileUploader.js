@@ -102,7 +102,7 @@ function validateAspectRatio(fileInput, expectedAspectRatio) {
 
 class FileUploader {
        constructor(_opt) {
-        let opt = { id: "", fileCount: 5, aspectRatio: 1, errorHandler: undefined, ..._opt }
+           let opt = { id: "", fileCount: 5, aspectRatio: 1, errorHandler: undefined, ImageDimension: undefined , ..._opt }
         this.elementId = opt.id;
         this.files = [];
         this.errorHandler = opt.errorHandler;
@@ -216,9 +216,21 @@ class FileUploader {
                 }
                 else {
                     if (!this.errorHandler)
-                        alert(`Please make sure that image file  have aspect ratio of ${this.aspectRatio}.`);
-                    else
-                        this.errorHandler(`Please make sure that image file  have aspect ratio of ${this.aspectRatio}.`)
+                        if (this.opt.imageDimension) {
+                            alert(`Please make sure that image height = ${opt.imageDimension.height} & width = ${opt.imageDimension.width}.`);
+                        }
+                        else {
+                            alert(`Please make sure that image file  have aspect ratio of ${this.aspectRatio}.`)
+                        }
+                    else {
+                        
+                        if (this.opt.imageDimension) {
+                            this.errorHandler(`Please make sure that image height = ${opt.imageDimension.height} & width = ${opt.imageDimension.width}.`)
+                        } else {
+                            this.errorHandler(`Please make sure that image file  have aspect ratio of ${this.aspectRatio}.`)
+                        }
+
+                    }
                 }
             }
         }
