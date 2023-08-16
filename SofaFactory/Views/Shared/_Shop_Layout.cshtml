@@ -170,6 +170,20 @@
     <script src="/assets/vendor/wow/wow.min.js"></script>
     <script src="/assets/js/script.js"></script>
     <script src="/assets/js/app.js"></script>
+    <script>var btn = $('#click-to-up');
+
+        $(window).scroll(function () {
+            if ($(window).scrollTop() > 300) {
+                btn.addClass('show');
+            } else {
+                btn.removeClass('show');
+            }
+        });
+
+        btn.on('click', function (e) {
+            e.preventDefault();
+            $('html, body').animate({ scrollTop: 0 }, '300');
+        });</script>
     @RenderSection("Scripts",false)
 </body>
 </html>
