@@ -57,7 +57,27 @@ fp_styles.innerHTML = `
         }
   
 `;
+function getImageDimensions(file) {
+    return new Promise((resolve, reject) => {
+        if (!file) {
+            // No file selected
+            resolve(undefined);
+        }
+        const reader = new FileReader();
 
+        reader.onload = function (event) {
+            const image = new Image();
+
+            image.onload = function () {
+                    resolve({ width: image.width, height: image.height });
+            };
+
+            image.src = event.target.result;
+        };
+
+        reader.readAsDataURL(file);
+    });
+}
 
 function validateFileType(file) {
     var validTypes = new Set(['jpeg', 'jpg', 'webp', 'png', 'svg']);
@@ -202,7 +222,8 @@ class FileUploader {
         for (const file of files) {
             let length = this.files.length;
             let validtype = validateFileType(file);
-            let validshape = validtype?await validateAspectRatio(file, this.aspectRatio):false;
+            let validshape = validtype ? await validateAspectRatio(file, this.aspectRatio) : false;
+            let dim = await getImageDimensions(file);
             if (validtype && validshape) {
                 let f = { "name": file.name, file: file, id: length == 0 ? length + 1 : this.files[length - 1].id + 1 };
                 this.files.push(f);
@@ -218,15 +239,15 @@ class FileUploader {
                 else {
                     if (!this.errorHandler)
                         if (this.height && this.width) {
-                            alert(`Please make sure that image height = ${this.height} & width = ${this.width}.`);
+                            alert(`Please make sure that image height = ${dim.width / this.aspectRatio} & width = ${dim.width}.`);
                         }
                         else {
                             alert(`Please make sure that image file  have aspect ratio of ${this.aspectRatio}.`);
                         }
                     else {
 
-                        if (this.height&& this.width) {
-                            this.errorHandler(`Please make sure that image height = ${this.height} & width = ${this.width}.`);
+                        if (this.height && this.width) {
+                            this.errorHandler(`Please make sure that image height = ${dim.width / this.aspectRatio} & width = ${dim.width}.`);
                         } else {
                             this.errorHandler(`Please make sure that image file  have aspect ratio of ${this.aspectRatio}.`);
                         }
