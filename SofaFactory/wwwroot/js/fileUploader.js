@@ -217,15 +217,15 @@ class FileUploader {
                 }
                 else {
                     if (!this.errorHandler)
-                        if (this.opt.imageDimension) {
+                        if (this.height && this.width) {
                             alert(`Please make sure that image height = ${this.height} & width = ${this.width}.`);
                         }
                         else {
                             alert(`Please make sure that image file  have aspect ratio of ${this.aspectRatio}.`);
                         }
                     else {
-                        
-                        if (this.opt.imageDimension) {
+
+                        if (this.height&& this.width) {
                             this.errorHandler(`Please make sure that image height = ${this.height} & width = ${this.width}.`);
                         } else {
                             this.errorHandler(`Please make sure that image file  have aspect ratio of ${this.aspectRatio}.`);
