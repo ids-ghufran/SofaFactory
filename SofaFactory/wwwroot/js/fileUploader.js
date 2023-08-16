@@ -107,11 +107,12 @@ class FileUploader {
         this.files = [];
         this.errorHandler = opt.errorHandler;
         this.fileCount = opt.fileCount;
-        this.aspectRatio = opt.aspectRatio;
+           
         this.fileIp = document.querySelector(`#${opt.id}`);
            this.renderUi(this.init);
            this.height = opt.imageDimension?.height;
            this.width = opt.imageDimension?.width;
+           this.aspectRatio = opt.imageDimension?.width && opt.imageDimension?.height ? opt.imageDimension.width / opt.imageDimension.height: opt.aspectRatio;
     }
     init(self) {
         self.input = self.fileIp.querySelector("#file-input");
