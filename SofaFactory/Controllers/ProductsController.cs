@@ -12,9 +12,11 @@ using SofaFactory.Models;
 using SofaFactory.Helper;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SofaFactory.Controllers
 {
+    
     public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -132,6 +134,7 @@ namespace SofaFactory.Controllers
         }
 
         // GET: Products/Create
+        [Authorize(Roles=$"{Roles.Admin},{Roles.SubAdmin}")]
         public async Task<IActionResult> Create()
         {
             //ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CreatedById");
@@ -151,6 +154,7 @@ namespace SofaFactory.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         //[ValidateAntiForgeryToken]
+        [Authorize(Roles = $"{Roles.Admin},{Roles.SubAdmin}")]
         public async Task<IActionResult> Create([FromForm] ProductVm modal)
         {
             if (modal.Images==null|| modal.Images.Count < 1)
@@ -226,6 +230,7 @@ namespace SofaFactory.Controllers
         }
 
         // GET: Products/Edit/5
+        [Authorize(Roles = $"{Roles.Admin},{Roles.SubAdmin}")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Products == null)
@@ -250,6 +255,7 @@ namespace SofaFactory.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = $"{Roles.Admin},{Roles.SubAdmin}")]
         public async Task<IActionResult> Edit(int id, [Bind("ProductId,Name,Description,Details,CategoryId,SubCategoryId,Discount,DiscountType,Rating,Quantity,Dimensions,Highlights,Color,Warranty,SeatingCapacity,AssemblyDetails,PackageDetails,CreatedOn,UpdatedOn,CreatedById,UpdatedById")] Product product)
         {
             if (id != product.ProductId)
@@ -285,6 +291,7 @@ namespace SofaFactory.Controllers
         }
 
         // GET: Products/Delete/5
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Products == null)
@@ -305,8 +312,8 @@ namespace SofaFactory.Controllers
 
             return View(product);
         }
-
         // POST: Products/Delete/5
+        [Authorize(Roles = Roles.Admin)]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

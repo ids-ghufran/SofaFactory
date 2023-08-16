@@ -9,6 +9,8 @@ using Domain.Models;
 using SofaFactory.Data;
 using Microsoft.AspNetCore.Http;
 using SofaFactory.Models;
+using Microsoft.AspNetCore.Authorization;
+using SofaFactory.Helper;
 
 namespace SofaFactory.Controllers
 {
@@ -22,6 +24,7 @@ namespace SofaFactory.Controllers
         }
 
         // GET: Categories
+        [Authorize(Roles =$"{Roles.Admin},{Roles.SubAdmin}")]
         public async Task<IActionResult> Index(int page=1, int pageLength=8, string? search= null)
         {
             var skip= (page - 1)*pageLength;
@@ -46,6 +49,7 @@ namespace SofaFactory.Controllers
         }
 
         // GET: Categories/Details/5
+        [Authorize(Roles = $"{Roles.Admin},{Roles.SubAdmin}")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Categories == null)
@@ -67,6 +71,7 @@ namespace SofaFactory.Controllers
         }
 
         // GET: Categories/Create
+        [Authorize(Roles = $"{Roles.Admin},{Roles.SubAdmin}")]
         public IActionResult Create()
         {
             //ViewData["CreatedById"] = new SelectList(_context.Set<AppUser>(), "Id", "Id");
@@ -80,6 +85,7 @@ namespace SofaFactory.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = $"{Roles.Admin},{Roles.SubAdmin}")]
         public async Task<IActionResult> Create(CategoryVm category)
         {
             if (ModelState.IsValid && !(category.Image == null || category.Image.Length == 0))
@@ -124,6 +130,7 @@ namespace SofaFactory.Controllers
         }
 
         // GET: Categories/Edit/5
+        [Authorize(Roles = $"{Roles.Admin},{Roles.SubAdmin}")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Categories == null)
@@ -147,6 +154,7 @@ namespace SofaFactory.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = $"{Roles.Admin},{Roles.SubAdmin}")]
         public async Task<IActionResult> Edit(int id, [Bind("CategoryId,Name,Description,ImageId,ParentId,CreatedOn,UpdatedOn,CreatedById,UpdatedById")] Category category)
         {
             if (id != category.CategoryId)
@@ -181,6 +189,7 @@ namespace SofaFactory.Controllers
         }
 
         // GET: Categories/Delete/5
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Categories == null)
@@ -204,6 +213,7 @@ namespace SofaFactory.Controllers
         // POST: Categories/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Categories == null)

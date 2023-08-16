@@ -116,7 +116,12 @@
                         @await Component.InvokeAsync("Category")
                     </li>
 
-                    <li><a href="#category-page">Our Category</a></li>
+                    <li><a href="/#category-page">Our Category</a></li>
+                    @if (User.Identity.IsAuthenticated && (User.IsInRole(Roles.Admin) || User.IsInRole(Roles.SubAdmin)))
+                    {
+                    <li><a href="/Categories">All Categories</a></li>
+                    <li><a href="/Slider">Home Page Slides</a></li>
+                    }
 
                     <li><a href="./contact.html">Contact</a></li>
                     <li><a href="./store.html">Stores</a></li>
