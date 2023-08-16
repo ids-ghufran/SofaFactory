@@ -4,6 +4,7 @@ var fp_styles = document.createElement('style');
 fp_styles.innerHTML = `
  
         .file-uploader-container {
+            position:relative;
             padding: 5px;
             min-height: 250px;
             border: 2px dashed lightgray;
@@ -240,17 +241,17 @@ class FileUploader {
                 else {
                     if (!this.errorHandler)
                         if (this.height && this.width) {
-                            alert(`Please make sure that image height = ${dim.width / this.aspectRatio} & width = ${dim.width}.`);
+                            alert(`Please make sure that image's aspect ratio= ${this.aspectRatio.toFixed(2)}, height = ${((dim.width < 1200 ? 1200: dim.width) / this.aspectRatio).toFixed(2) } & width = ${ dim.width }.`);
                         }
                         else {
-                            alert(`Please make sure that image file  have aspect ratio of ${this.aspectRatio}.`);
+                            alert(`Please make sure that image file  have aspect ratio of ${this.aspectRatio.toFixed(2) }.`);
                         }
                     else {
 
                         if (this.height && this.width) {
-                            this.errorHandler(`Please make sure that image height = ${dim.width / this.aspectRatio} & width = ${dim.width}.`);
+                            this.errorHandler(`Please make sure that image's aspect ratio= ${this.aspectRatio.toFixed(2) }, height = ${((dim.width < 1200 ? 1200: dim.width) / this.aspectRatio).toFixed(2)} & width = ${ dim.width }.`);
                         } else {
-                            this.errorHandler(`Please make sure that image file  have aspect ratio of ${this.aspectRatio}.`);
+                            this.errorHandler(`Please make sure that image file  have aspect ratio of ${ this.aspectRatio.toFixed(2) }.`);
                         }
 
                     }
