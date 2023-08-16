@@ -9,52 +9,58 @@
 
 <div class="container py-5">
     <div class="card">
-        <div class="card-header"><h3 class="my-0">Add New Category</h3></div>
+        <div class="card-header"><h5 class="my-0">Add New Category</h5></div>
         <div class="card-body">
-                    <form asp-action="Create" id="my-cat" enctype="multipart/form-data">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <div class="container-fluid">
-                            <div class="row">
-                        <div class="form-group col-md-6">
-                            <label asp-for="Name" class="control-label"></label>
-                            <input asp-for="Name" class="form-control" />
-                            <span asp-validation-for="Name" class="text-danger"></span>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label asp-for="Description" class="control-label"></label>
-                            <textarea  asp-for="Description" class="form-control" ></textarea>
-                            <span asp-validation-for="Description" class="text-danger"></span>
-                        </div>
-                        <div class="form-group col-md-6 d-none">
-                            <label asp-for="ParentId" class="control-label"></label>
-                            <input asp-for="ParentId" class="form-control" value="0" />
-                            <span asp-validation-for="ParentId" class="text-danger"></span>
-                        </div>
-                        @*<div class="col-md-6 p-3">
+            <form asp-action="Create" id="my-cat" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6">
+
+                            <div class="form-group ">
+                                <label asp-for="Name" class="control-label"></label>
+                                <input asp-for="Name" class="form-control" />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                            <div class="form-group my-3">
+                                <label asp-for="Description" class="control-label"></label>
+                                <textarea asp-for="Description" class="form-control"></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-6 d-none">
+                                <label asp-for="ParentId" class="control-label"></label>
+                                <input asp-for="ParentId" class="form-control" value="0" />
+                                <span asp-validation-for="ParentId" class="text-danger"></span>
+                            </div>
+                            @*<div class="col-md-6 p-3">
                             <div class="w-100 image-uploader">
-                                <div class="image-input">
-                                    <div class="image-icon-container">
-                                        <i class="fa fa-image" id="image-selector" data-toggle="tooltip" title="Choose Uploaded Image" style="cursor:pointer"></i>
-                                    </div>
-                                   <div class="uploader-icon-container">
-                                        <i class="fa fa-file-upload" id="image-uploader" data-toggle="tooltip" title=" Upload new Image" style="color:slategrey;font-size:84px;cursor:pointer"></i>
-                                   </div>
-                                </div>
-                                <div class="image-display"></div>
+                            <div class="image-input">
+                            <div class="image-icon-container">
+                            <i class="fa fa-image" id="image-selector" data-toggle="tooltip" title="Choose Uploaded Image" style="cursor:pointer"></i>
                             </div>
-                        </div>*@
-                            <div class="col-md-6">
-                                <label asp-for="Image" class="control-label"></label>
-                                <input type="file" name="Image" asp-for="Image" class="image-control" id="Image" />
+                            <div class="uploader-icon-container">
+                            <i class="fa fa-file-upload" id="image-uploader" data-toggle="tooltip" title=" Upload new Image" style="color:slategrey;font-size:84px;cursor:pointer"></i>
                             </div>
+                            </div>
+                            <div class="image-display"></div>
+                            </div>
+                            </div>*@
+                        </div>
+                       
+                        <div class="col-md-6">
+                            <label asp-for="Image" class="control-label"></label>
+                            <input type="file" name="Image" required asp-for="Image"  class="image-control d-none" id="Image" />
+                            <div class="file-uploader-container" id="file-uploader"></div>
+                        </div>
+                       
                         <div class="form-group col-md-6 pt-3">
                             <input type="button" value="Create" id="submit-btn" class="btn btn-primary mt-3" />
                         </div>
-                            </div>
-                        </div>
-                       
-                    </form>
-                          
+                    </div>
+                </div>
+
+            </form>
+
         </div>
         @*<div class="card-footer"></div>*@
     </div>
@@ -63,90 +69,34 @@
 
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-     <script>
-         var isValidFile = false;
-         $("#Image").on("change", async  function () {
-             validateFile();
-         })
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/js/fileuploader.js"></script>
+    <script>
+        var dragel = new FileUploader({ id: "file-uploader", fileCount: 1, aspectRatio: 1, errorHandler: (msg) => swal("", msg, "error") });
+        //my-cat
+        $("#submit-btn").click(function () {
 
-        async function validateFile() {
-             $("#Image").removeClass("error");
-             $("#Image").parent().find('.error-msg').remove();
-             let validExt = validateFileType($("#Image").get(0).files[0]);
-             if (!validExt) {
-                 $("#Image").addClass("error");
-                 $("#Image").parent().append(`<span class="error-msg">Please select valid Image file<span>`)
-             } else {
-                 isValidFile = true;
-             }
-
-             let validAspectRatio = await validateAspectRatio($("#Image").get(0), 1);
-             console.log("valid ratio :", validAspectRatio)
-             if (validExt && !validAspectRatio) {
-                 $("#Image").addClass("error");
-                 $("#Image").parent().append(`<span class="error-msg">Upload Square Image<span>`)
-             } else {
-                 isValidFile = true;
-             }
-         }
-         function validateFileType(file) {
-             var validTypes =new Set (['jpeg', 'jpg', 'webp', 'png', 'svg']);
-             var fileName = file.name;
-             let temp = fileName.split('.');
-             let ext = temp[temp.length - 1];
-             return validTypes.has(ext);
-         }
-
-         
-         function validateAspectRatio(fileInput, expectedAspectRatio) {
-             return new Promise((resolve, reject) => {
-                 const file = fileInput.files[0];
-
-                 if (!file) {
-                     // No file selected
-                     resolve(false);
-                 }
-
-                 const reader = new FileReader();
-
-                 reader.onload = function (event) {
-                     const image = new Image();
-
-                     image.onload = function () {
-                         const aspectRatio = image.width / image.height;
-                         // Compare the aspect ratio with the expected aspect ratio (e.g., 16:9)
-                         if (Math.abs(aspectRatio - expectedAspectRatio) > 0.01) {
-                             // Invalid aspect ratio
-                             resolve(false);
-                         } else {
-                             // Valid aspect ratio
-                             resolve(true);
-                         }
-                     };
-
-                     image.src = event.target.result;
-                 };
-
-                 reader.readAsDataURL(file);
-             });
-         }
-         //my-cat
-         $("#submit-btn").click(function () {
-
-             let valid = $("#my-cat").valid();
-             if (valid && isValidFile) {
-                 $("#my-cat").submit();
-             } else {
-                 if (!isValidFile) {
-                     $("#Image").removeClass("error");
-                     $("#Image").parent().find('.error-msg').remove();
-                     $("#Image").addClass("error");
-                     $("#Image").parent().append(`<span class="error-msg">Please select valid Image file<span>`)
-                 } 
-             }
-         })
-     </script>
+            let valid = $("#my-cat").valid();
+            let isValidFile= dragel.getFile().length>0;
+            if (valid && isValidFile) {
+                var container= new DataTransfer();
+                dragel.getFile().map(c => container.items.add(c.file));
+                console.log("files",container);
+                let fileInputElement = document.getElementById('Image');
+                fileInputElement.files = container.files
+                $("#my-cat").submit();
+            } else {
+                if (!isValidFile) {
+                    $("#Image").removeClass("error");
+                    $("#Image").parent().find('.error-msg').remove();
+                    $("#Image").addClass("error");
+                    $("#Image").parent().append(`<span class="error-msg">Please select valid Image file<span>`)
+                }
+            }
+        })
+    </script>
 }
 @section Styles{
     <style>
@@ -154,9 +104,11 @@
             font-size: 96px;
             color: slategrey;
         }
+
         input.error {
             border: 1px solid red;
         }
+
         .w-100.image-uploader {
             padding: 5px;
             border: 2px dotted slategrey;
@@ -168,13 +120,15 @@
             align-items: center;
             gap: 10px;
         }
+
         .input-validation-error {
             border: 1px solid #dc3545;
         }
+
         .image-control {
             display: block;
             width: 100%;
-           /* height: calc(1.5em + px + 2px);*/
+            /* height: calc(1.5em + px + 2px);*/
             padding: 0px;
             font-size: 1rem;
             font-weight: 400;
@@ -182,18 +136,20 @@
             color: #495057;
             background-color: #fff;
             background-clip: padding-box;
-            border: 1px  solid #ced4da;
+            border: 1px solid #ced4da;
             border-radius: 0.25rem;
             transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
         }
+
         input::file-selector-button {
-            background: linear-gradient(#eeeeee, #ededed ,#eeeeee );
+            background: linear-gradient(#eeeeee, #ededed,#eeeeee );
             border: unset;
             border-radius: 0px;
             height: calc(1.5em + 0.75rem + 2px);
-            cursor:pointer;
-            margin-right:10px;
+            cursor: pointer;
+            margin-right: 10px;
         }
+
         span.error-msg {
             color: #dc3545;
         }
