@@ -102,7 +102,7 @@ function validateAspectRatio(fileInput, expectedAspectRatio) {
 
 class FileUploader {
        constructor(_opt) {
-           let opt = { id: "", fileCount: 5, aspectRatio: 1, errorHandler: undefined, ImageDimension: undefined , ..._opt }
+           let opt = { id: "", fileCount: 5, aspectRatio: 1, errorHandler: undefined, imageDimension: undefined , ..._opt }
         this.elementId = opt.id;
         this.files = [];
         this.errorHandler = opt.errorHandler;
