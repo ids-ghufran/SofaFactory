@@ -109,8 +109,9 @@ class FileUploader {
         this.fileCount = opt.fileCount;
         this.aspectRatio = opt.aspectRatio;
         this.fileIp = document.querySelector(`#${opt.id}`);
-         this.renderUi(this.init);
-       
+           this.renderUi(this.init);
+           this.height = opt.imageDimension?.height;
+           this.width = opt.imageDimension?.width;
     }
     init(self) {
         self.input = self.fileIp.querySelector("#file-input");
@@ -217,17 +218,17 @@ class FileUploader {
                 else {
                     if (!this.errorHandler)
                         if (this.opt.imageDimension) {
-                            alert(`Please make sure that image height = ${opt.imageDimension.height} & width = ${opt.imageDimension.width}.`);
+                            alert(`Please make sure that image height = ${this.height} & width = ${this.width}.`);
                         }
                         else {
-                            alert(`Please make sure that image file  have aspect ratio of ${this.aspectRatio}.`)
+                            alert(`Please make sure that image file  have aspect ratio of ${this.aspectRatio}.`);
                         }
                     else {
                         
                         if (this.opt.imageDimension) {
-                            this.errorHandler(`Please make sure that image height = ${opt.imageDimension.height} & width = ${opt.imageDimension.width}.`)
+                            this.errorHandler(`Please make sure that image height = ${this.height} & width = ${this.width}.`);
                         } else {
-                            this.errorHandler(`Please make sure that image file  have aspect ratio of ${this.aspectRatio}.`)
+                            this.errorHandler(`Please make sure that image file  have aspect ratio of ${this.aspectRatio}.`);
                         }
 
                     }
