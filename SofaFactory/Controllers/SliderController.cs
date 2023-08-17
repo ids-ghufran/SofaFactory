@@ -97,13 +97,19 @@ namespace SofaFactory.Controllers
                 return NotFound();
             }
 
-            var slider = await _context.Slider.FindAsync(id);
+            var slider = await _context.Slider.Include(x => x.Image).Where(x => x.Id == id).FirstOrDefaultAsync();
             if (slider == null)
             {
                 return NotFound();
             }
-            ViewData["ImageId"] = new SelectList(_context.Images, "ImageId", "Alt", slider.ImageId);
-            return View(slider);
+            var sliderVm = new SliderVm
+            {
+                Id = slider.Id,
+                BtnLink = slider.BtnLink,
+                Description = slider.Description,
+                Title = slider.Title
+            };
+            return View(sliderVm);
         }
 
         // POST: Slider/Edit/5
@@ -111,22 +117,38 @@ namespace SofaFactory.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,BtnLink,ImageId")] Slider slider)
+        public async Task<IActionResult> Edit(int id, SliderVm modal)
         {
-            if (id != slider.Id)
-            {
-                return NotFound();
-            }
 
-            if (ModelState.IsValid)
-            {
+                var slider = await _context.Slider.Include(x => x.Image).Where(x => x.Id == modal.Id).FirstOrDefaultAsync();
+                var oldImg = slider.Image;
+                slider.BtnLink = modal.BtnLink;
+                slider.Description = modal.Description;
+                slider.Title = modal.Title;
+                if(modal.Image != null)
+                {
+                var imgPath = Path.Combine(environment.WebRootPath, "assets", "images", "slider");
+                var imgUrl = await FileHelper.SaveFileAsync(modal.Image, imgPath);
+                slider.Image = new Image
+                {
+                    Alt = !string.IsNullOrEmpty(modal.Title) ? modal.Title : "Slider Image",
+                    Src = imgUrl
+                };
+
+                };
                 try
                 {
-                    _context.Update(slider);
-                    await _context.SaveChangesAsync();
+                if(modal.Image != null)
+                {
+                    _context.Images.Remove(oldImg);
+                    FileHelper.DeleteFile(Path.Combine(environment.WebRootPath, oldImg.Src));
+                }
+                    
+                await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
+
                     if (!SliderExists(slider.Id))
                     {
                         return NotFound();
@@ -137,9 +159,6 @@ namespace SofaFactory.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            }
-            ViewData["ImageId"] = new SelectList(_context.Images, "ImageId", "Alt", slider.ImageId);
-            return View(slider);
         }
 
         // GET: Slider/Delete/5
