@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_Shop_Layout.cshtml";
+    var catId = ViewBag.CategoryId;
 }
 
 
@@ -12,6 +13,7 @@
         <div class="card-header"><h5 class="my-0">Add New Category</h5></div>
         <div class="card-body">
             <form asp-action="Create" id="my-cat" enctype="multipart/form-data">
+                <input asp-for="ParentId" value="@catId" class="d-none" />
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="container-fluid">
                     <div class="row">

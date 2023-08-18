@@ -25,10 +25,23 @@ namespace SofaFactory.Controllers
 
         // GET: Categories
         [Authorize(Roles =$"{Roles.Admin},{Roles.SubAdmin}")]
-        public async Task<IActionResult> Index(int page=1, int pageLength=8, string? search= null)
+        public async Task<IActionResult> Index(int? categoryId, int page=1, int pageLength=8, string? search= null)
         {
             var skip= (page - 1)*pageLength;
+            Category? parent = null;
             var applicationDbContext = _context.Categories.AsQueryable();
+
+            if(categoryId == null)
+            {
+                applicationDbContext = applicationDbContext.Where(x => x.ParentId == null);
+            }
+            else
+            {
+                parent = await applicationDbContext.Where(x => x.CategoryId == categoryId).FirstOrDefaultAsync();
+                
+                applicationDbContext = applicationDbContext.Where(x => x.ParentId == categoryId);
+            }
+
             if (search != null)
             {
                 applicationDbContext= applicationDbContext.Where(c=>c.Name.Contains(search)||c.Description.Contains(search)).AsQueryable();
@@ -44,8 +57,17 @@ namespace SofaFactory.Controllers
             ViewBag.PageLength = pageLength;
             ViewBag.Page = page;
             ViewBag.search= search;
+            ViewBag.Parent = parent;
             
             return View(models);
+        }
+
+        [Authorize(Roles = $"{Roles.Admin},{Roles.SubAdmin}")]
+        [Route("Categories/get-subcategories/{categoryId}")]
+        public async Task<IActionResult> GetSubCategories(int categoryId)
+        {
+            var subCat = await _context.Categories.Where(x => x.ParentId == categoryId).ToListAsync();
+            return Json(subCat);
         }
 
         // GET: Categories/Details/5
@@ -72,11 +94,12 @@ namespace SofaFactory.Controllers
 
         // GET: Categories/Create
         [Authorize(Roles = $"{Roles.Admin},{Roles.SubAdmin}")]
-        public IActionResult Create()
+        public IActionResult Create(int? categoryId)
         {
             //ViewData["CreatedById"] = new SelectList(_context.Set<AppUser>(), "Id", "Id");
             //ViewData["ImageId"] = new SelectList(_context.Images, "ImageId", "Alt");
             //ViewData["UpdatedById"] = new SelectList(_context.Set<AppUser>(), "Id", "Id");
+            ViewBag.CategoryId = categoryId;
             return View();
         }
 
@@ -105,9 +128,9 @@ namespace SofaFactory.Controllers
                 {
                     Name = category.Name,
                     Description = category.Description,
-                    ParentId = 1,
                     CreatedOn = DateTime.Now,
                     UpdatedOn = DateTime.Now,
+                    ParentId = category.ParentId,
                     Image = new Domain.Models.Image()
                     {
                         Alt = category.Name,

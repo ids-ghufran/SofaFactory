@@ -6,7 +6,7 @@ namespace SofaFactory.Models
     public class CategoryVm
     {
         public int CategoryId { get; set; }
-        public int ParentId { get; set; }
+        public int? ParentId { get; set; }
         [Required]
         public string Name { get; set; }
         [Required]

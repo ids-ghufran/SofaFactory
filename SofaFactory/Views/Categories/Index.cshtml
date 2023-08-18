@@ -9,16 +9,39 @@
     var search = ViewBag.search == null ? "" : $"&search={ViewBag.search}";
     var pages = (int)Math.Ceiling((double)(count / pageLength));
     var plink = $"/Categories?pageLength={pageLength}{search}&page=" + ((page < 2) ? "1" : $"{page - 1}");
-    var nlink = $"/Categories?pageLength={pageLength}{search}&page=" +( (page < pages) ? $"{page + 1}" : pages.ToString());
+    var nlink = $"/Categories?pageLength={pageLength}{search}&page=" + ((page < pages) ? $"{page + 1}" : pages.ToString());
     var link = $"/Categories?pageLength={pageLength}{search}&page=";
+
+    var parent = ViewBag.Parent;
 }
 
 
 <div class="container py-5">
     <div class="card ">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h3 class="my-0">Categories</h3>
-            <div class="card-btns">   <a asp-action="Create">Create New</a> </div>
+            <h3 class="my-0">
+                @if (parent != null)
+                {
+                    <span>Sub Categories of @parent.Name</span>
+                }
+                else
+                {
+                    <span>Categories</span>
+                }
+            </h3>
+            <div class="card-btns">
+
+                @if (parent != null)
+                {
+                    <a href="/Categories/Create?categoryId=@parent.CategoryId">Create New</a>
+                }
+                else
+                {
+
+                    <a asp-action="Create">Create New</a>
+                }
+
+            </div>
         </div>
         <div class="card-body">
             <div class="container-fluid">
@@ -26,17 +49,19 @@
                     @foreach (var cat in Model)
                     {
                         <div class="col-md-3 my-3">
-                            <div class="category-container">
-                                <div class="category-Image">
-                                    <img src="@cat.Image.Src" class="category-image" />
-                                    <div class="category-title">@cat.Name</div>
+                            <a onclick="handleSubCatLink(this)" href="/categories?categoryId=@cat.CategoryId">
+                                <div class="category-container">
+                                    <div class="category-Image">
+                                        <img src="@cat.Image.Src" class="category-image" />
+                                        <div class="category-title">@cat.Name</div>
+                                    </div>
+                                    <div class="category-description">@cat.Description.Substring(0, cat.Description.Length < 150 ? cat.Description.Length : 150)</div>
+                                    <div class="category-actions">
+                                        <a href="/categories/edit?id=@cat.CategoryId" class="btn btn-info"><i class="fa fa-pencil"></i></a>
+                                        <a href="/categories/delete?id=@cat.CategoryId" data-id="@cat.CategoryId" class="btn btn-info"><i class="fa fa-trash"></i></a>
+                                    </div>
                                 </div>
-                                <div class="category-description">@cat.Description.Substring(0,cat.Description.Length<150?cat.Description.Length:150)</div>
-                                <div class="category-actions">
-                                    <a href="/categories/edit?id=@cat.CategoryId" class="btn btn-info"><i class="fa fa-pencil"></i></a>
-                                    <a href="/categories/delete?id=@cat.CategoryId" data-id="@cat.CategoryId" class="btn btn-info"><i class="fa fa-trash"></i></a>
-                                </div>
-                            </div>
+                            </a>
                         </div>
                     }
                 </div>
@@ -63,6 +88,18 @@
     </div>
 </div>
 
+
+@section Scripts{
+    <script>
+            var parent = @Html.Raw(Json.Serialize(parent));
+            function handleSubCatLink(e) {
+                if (parent !== null) {
+                    $(e).attr('href', "#")
+                }
+            }
+    </script>
+
+        }
 @section Styles{
     <style>
         .category-image{

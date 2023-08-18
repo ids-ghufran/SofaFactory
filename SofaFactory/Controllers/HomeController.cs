@@ -20,7 +20,7 @@ namespace SofaFactory.Controllers
         public async Task<IActionResult> Index()
         {
             ViewBag.Slider = await context.Slider.Include(x => x.Image).ToListAsync();
-            var cats = await context.Categories.Include(x => x.Image).Take(7).ToListAsync();
+            var cats = await context.Categories.Where(x => x.ParentId == null).Include(x => x.Image).Take(7).ToListAsync();
             return View(cats);
         }
 

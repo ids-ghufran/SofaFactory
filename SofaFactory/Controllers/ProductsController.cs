@@ -139,7 +139,7 @@ namespace SofaFactory.Controllers
         {
             //ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CreatedById");
             //ViewData["SubCategoryId"] = new SelectList(_context.Categories, "CategoryId", "CreatedById");
-            ViewData["CategoryId"] = await _context.Categories.ToListAsync();
+            ViewData["CategoryId"] = await _context.Categories.Where(x => x.ParentId == null).ToListAsync();
             ViewData["SizeId"] = await _context.Sizes.ToListAsync();
             ViewData["MaterialId"]=await _context.Materials.ToListAsync();
             ViewData["StorageTypeId"] = await _context.StorageTypes.ToListAsync();

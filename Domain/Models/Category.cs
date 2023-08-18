@@ -13,6 +13,6 @@ namespace Domain.Models
         public string Description { get; set; }
         public int ImageId { get; set; }
         public Image? Image { get; set; }
-        public int ParentId { get; set; }
+        public int? ParentId { get; set; }
     }
 }
