@@ -23,19 +23,19 @@
                                  </div>
                                    <div class="form-group mb-3">
                                           <label for="Description" class="control-label">Seo Description</label>
-                                         <textarea asp-for="Description" data-rules="required:true,minlength:50" class="form-control"></textarea>
+                                         <textarea asp-for="Description" data-rules="required:true" class="form-control"></textarea>
                                          <span asp-validation-for="Description" class="text-danger"></span>
                                  </div>
                              </div>
                                <div class="step">
                                      <div class="form-group mb-3">
                                             <label asp-for="Details" class="control-label"></label>
-                                <textarea rows="1" data-rules="summernoteRequired:true,summernoteMinLength:50" asp-for="Details" class="form-control"></textarea>
+                                <textarea rows="1" data-rules="summernoteRequired:true" asp-for="Details" class="form-control"></textarea>
                                             <span asp-validation-for="Details" class="text-danger"></span>
                                     </div>
                                    <div class="form-group mb-3">
                                         <label asp-for="Highlights" class="control-label"></label>
-                                        <textarea asp-for="Highlights" data-rules="summernoteRequired:true,summernoteMinLength:50" class="form-control"></textarea>
+                                        <textarea asp-for="Highlights" data-rules="summernoteRequired:true" class="form-control"></textarea>
                                         <span asp-validation-for="Highlights" class="text-danger"></span>
                                  </div>
                              </div>
@@ -55,10 +55,10 @@
                                     <label asp-for="SubCategoryId"  class="control-label"></label>
                                     <select asp-for="SubCategoryId" data-rules="required:true" class="form-control">
                                 <option value="">Select Sub Category</option>
-                                        @foreach (var cat in ViewBag.CategoryId)
+                                        @*@foreach (var cat in ViewBag.CategoryId)
                                         {
                                         <option value="@cat.CategoryId">@cat?.Name</option>
-                                        }
+                                        }*@
                             </select>
                                  </div>
                              </div>
@@ -465,7 +465,7 @@
                 });
             })
         }
-    
+
         function toFormData(obj) {
             const formData = new FormData();
             for (const key in obj) {
@@ -484,6 +484,32 @@
                 return val;
             }
         }
+
+        //render subcategory on Category change
+        $("#CategoryId").on('change', function (e) {
+            var catId = $(e.target).val();
+            $.ajax({
+                url: "/categories/get-subcategories/" + catId,
+                success: function (result) {
+                    if (result.length > 0) {
+                        $.each(result, function (index, cat) {
+                            $("#SubCategoryId").append(
+                                `<option value="${cat?.categoryId}">${cat?.name}</option>`
+                            )
+                        })
+                    } else {
+                        $("#SubCategoryId").html(
+                            `<option value="">Select Sub Category</option>`
+                        )
+                    }
+                   
+                },
+                error: function (error) {
+                    console.log(error)
+                }
+            })
+        })
+        //render subcategory on Category change
     </script>
 
 
