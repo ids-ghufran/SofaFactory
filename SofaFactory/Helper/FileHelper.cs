@@ -19,7 +19,7 @@ namespace SofaFactory.Helper
             {
                 await file.CopyToAsync(stream);
             }
-            var relativePath = Path.GetRelativePath("wwwroot", pathWithName);
+            var relativePath = "/" + Path.GetRelativePath("wwwroot", pathWithName).Replace("\\","/");
             return relativePath;
         }
 
