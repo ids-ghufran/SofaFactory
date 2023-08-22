@@ -232,6 +232,33 @@
     <script src="~/lib/summernote-0.8.18-dist/summernote-bs4.min.js"></script>
     <script src="~/lib/sweetalert.js"></script>
     <script>
+        function uploadImage(imgObj) {
+            let imageData = new FormData();
+            imageData.append("File", imgObj.file);
+            //debugger;
+            setId=(image)=>{
+                imgObj.id=image.imageId;
+            }
+            $.ajax({
+                url: "/File/Create",
+                method: "Post",
+                data: imageData,
+                //headers: {
+                    contentType: false,
+                    processData: false,
+                //},
+                success: function (data) {
+                    console.log("Image",data)
+                    //imageObj.id = data.imageId;
+                    setId(data);
+                },
+                error: function (xhr, data, status) {
+                    console.log("xhr", xhr);
+                    console.log("data", data);
+                    console.log("error", status);
+                }
+            });
+        }
         console.log("validatorplugin >", $.validator);
         $(document).ready(()=>{
             $.validator.addMethod('summernoteRequired', function (value, element) {
@@ -311,8 +338,8 @@
 
             if(isSubmit){
                 let fileCount =dragel.getFileCount();
-                console.log("filecount",fileCount);
-                console.log("filecount D >",dragel.getFile().length);
+                //console.log("filecount",fileCount);
+                //console.log("filecount D >",dragel.getFile().length);
                 
                 if(fileCount<1){
                     swal("","Please Select Product Images","error");
@@ -398,11 +425,11 @@
                 }
             }
         });
-        var dragel = new FileUploader({ id: "file-uploader", fileCount: 4, aspectRatio: 1, errorHandler: (msg) => swal("",msg , "error") });
+        var dragel = new FileUploader({ id: "file-uploader", fileCount: 4, aspectRatio: 1, errorHandler: (msg) => swal("", msg, "error"), fileSelectEvent: uploadImage,  });
     </script>
 
     <script>
-
+        
         function submitFrom(){
             return new Promise((resolve,reject)=>{
                 if (!$("#productForm").valid()) {
@@ -434,10 +461,11 @@
                     seatingCapacityId: $("#SeatingCapacityId").val(),
                 }
                 var formData = toFormData(formObj)
-                var imgs = dragel.getFile().map(x => x.file)
-                for (var i = 0; i < imgs.length; i++) {
-                    formData.append("images", imgs[i])
-                }
+                dragel.getFile().map(x => formData.append("imageIds", x.id))
+                //var imgs = dragel.getFile().map(x => x.file)
+                //for (var i = 0; i < imgs.length; i++) {
+                //    formData.append("images", imgs[i])
+                //}
 
                 console.log(formData, formObj)
 

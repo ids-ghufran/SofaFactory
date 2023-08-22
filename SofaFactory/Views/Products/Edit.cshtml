@@ -1,130 +1,626 @@
-﻿@model Domain.Models.Product
+﻿@using Newtonsoft.Json;
+@model Domain.Models.Product
 
 @{
     ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_Shop_Layout.cshtml";
 }
 
-<h1>Edit</h1>
 
-<h4>Product</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+@*
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ProductId" />*@
+
+<div class="container-fluid px-5 py-5">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title my-0">Add New Product</h4>
+        </div>
+        <div class="card-body">
+          <form asp-action="Edit" id="productForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="ProductId" />
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Details" class="control-label"></label>
-                <input asp-for="Details" class="form-control" />
-                <span asp-validation-for="Details" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CategoryId" class="control-label"></label>
-                <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
-                <span asp-validation-for="CategoryId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SubCategoryId" class="control-label"></label>
-                <select asp-for="SubCategoryId" class="form-control" asp-items="ViewBag.SubCategoryId"></select>
-                <span asp-validation-for="SubCategoryId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Discount" class="control-label"></label>
-                <input asp-for="Discount" class="form-control" />
-                <span asp-validation-for="Discount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DiscountType" class="control-label"></label>
-                <select asp-for="DiscountType" class="form-control"></select>
-                <span asp-validation-for="DiscountType" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Rating" class="control-label"></label>
-                <input asp-for="Rating" class="form-control" />
-                <span asp-validation-for="Rating" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Quantity" class="control-label"></label>
-                <input asp-for="Quantity" class="form-control" />
-                <span asp-validation-for="Quantity" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Dimensions" class="control-label"></label>
-                <input asp-for="Dimensions" class="form-control" />
-                <span asp-validation-for="Dimensions" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Highlights" class="control-label"></label>
-                <input asp-for="Highlights" class="form-control" />
-                <span asp-validation-for="Highlights" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Color" class="control-label"></label>
-                <input asp-for="Color" class="form-control" />
-                <span asp-validation-for="Color" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Warranty" class="control-label"></label>
-                <input asp-for="Warranty" class="form-control" />
-                <span asp-validation-for="Warranty" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SeatingCapacity" class="control-label"></label>
-                <input asp-for="SeatingCapacity" class="form-control" />
-                <span asp-validation-for="SeatingCapacity" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AssemblyDetails" class="control-label"></label>
-                <input asp-for="AssemblyDetails" class="form-control" />
-                <span asp-validation-for="AssemblyDetails" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PackageDetails" class="control-label"></label>
-                <input asp-for="PackageDetails" class="form-control" />
-                <span asp-validation-for="PackageDetails" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedOn" class="control-label"></label>
-                <input asp-for="CreatedOn" class="form-control" />
-                <span asp-validation-for="CreatedOn" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UpdatedOn" class="control-label"></label>
-                <input asp-for="UpdatedOn" class="form-control" />
-                <span asp-validation-for="UpdatedOn" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedById" class="control-label"></label>
-                <select asp-for="CreatedById" class="form-control" asp-items="ViewBag.CreatedById"></select>
-                <span asp-validation-for="CreatedById" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UpdatedById" class="control-label"></label>
-                <select asp-for="UpdatedById" class="form-control" asp-items="ViewBag.UpdatedById"></select>
-                <span asp-validation-for="UpdatedById" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+            @Html.AntiForgeryToken()
+                <div class="row">
+                    <div class="col-md-7">
+                        <div class="step">
+                            <div class="form-group mb-3">
+                                <label asp-for="Name" class="control-label"></label>
+                                <input asp-for="Name" data-rules="required:true, minlength:3" class="form-control" />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="Description" class="control-label">Seo Description</label>
+                                <textarea asp-for="Description" data-rules="required:true" class="form-control"></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="form-group mb-3">
+                                <label asp-for="Details" class="control-label"></label>
+                                <textarea rows="1" data-rules="summernoteRequired:true" asp-for="Details" class="form-control"></textarea>
+                                <span asp-validation-for="Details" class="text-danger"></span>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label asp-for="Highlights" class="control-label"></label>
+                                <textarea asp-for="Highlights" data-rules="summernoteRequired:true" class="form-control"></textarea>
+                                <span asp-validation-for="Highlights" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="form-group mb-3">
+                                <div class="form-group ">
+                                    <label asp-for="CategoryId" class="control-label"></label>
+                                    <select asp-for="CategoryId" data-rules="required:true" class="form-control">
+                                        <option value="">Select Category</option>
+                                        @foreach (var cat in ViewBag.CategoryId)
+                                        {
+                                            <option value="@cat.CategoryId">@cat?.Name</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="SubCategoryId" class="control-label"></label>
+                                    <select asp-for="SubCategoryId" value="@Model.SubCategoryId" data-val="@Model.SubCategoryId" data-rules="required:true" class="form-control">
+                                        <option value="">Select Sub Category</option>
+                                        @foreach (var cat in ViewBag.SubCategoryId)
+                                        {
+                                            var selected = cat.CategoryId == Model.SubCategoryId ;
+                                            if (selected)
+                                            {
+                                                <option value="@cat.CategoryId" selected>@cat?.Name</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@cat.CategoryId">@cat?.Name</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="form-group mb-3">
+                                <label asp-for="Price" class="control-label"></label>
+                                <input asp-for="Price" data-rules="required:true,number:true" class="form-control" />
+                                <span asp-validation-for="Price" class="text-danger"></span>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label asp-for="Emi" class="control-label"></label>
+                                <input asp-for="Emi" data-rules="required:true,number:true" class="form-control" />
+                                <span asp-validation-for="Emi" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="form-group mb-3">
+                                <label asp-for="Discount" class="control-label"></label>
+                                <input asp-for="Discount" data-rules="required:true,number:true" class="form-control" />
+                                <span asp-validation-for="Discount" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="DiscountType" class="control-label"></label>
+                                <select name="DiscountType" asp-for="DiscountType" data-rules="required:true" class="form-control" id="DiscountType">
+                                    <option value="">Select Discount Type</option>
+                                    <option value="1">Flat</option>
+                                    <option value="2">Percent</option>
+                                </select>
+                                <span asp-validation-for="DiscountType" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="form-group mb-3">
+                                <label asp-for="Rating" class="control-label"></label>
+                                <input asp-for="Rating" data-rules="required:true,number:true,max:5,min:0" class="form-control" />
+                                <span asp-validation-for="Rating" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Quantity" class="control-label"></label>
+                                <input asp-for="Quantity" data-rules="required:true, number:true" class="form-control" />
+                                <span asp-validation-for="Quantity" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="form-group mb-3">
+                                <label for="SizeId" class="control-label">Size</label>
+                                <select asp-for="SizeId" data-rules="required:true" class="form-control">
+                                    <option value="">Select Size</option>
+                                    @foreach (var cat in ViewBag.SizeId)
+                                    {
+                                        <option value="@cat.Id">@cat?.Label</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="SizeId" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="MaterialId" class="control-label">Brand</label>
+                                <select asp-for="BrandId" data-rules="required:true" class="form-control">
+                                    <option value="">Select Brand</option>
+                                    @foreach (var cat in ViewBag.Brands)
+                                    {
+                                        <option value="@cat.BrandId">@cat?.BrandName</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="MaterialId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="form-group mb-3">
+                                <label for="StorageTypeId" class="control-label">Storage Type</label>
+                                <select asp-for="StorageTypeId" data-rules="required:true" class="form-control">
+                                    <option value="">Select Storage Type</option>
+                                    @foreach (var cat in ViewBag.StorageTypeId)
+                                    {
+                                        <option value="@cat.Id">@cat?.Label</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="StorageTypeId" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="MaterialId" class="control-label">Material</label>
+                                <select asp-for="MaterialId" data-rules="required:true" class="form-control">
+                                    <option value="">Select Material</option>
+                                    @foreach (var cat in ViewBag.MaterialId)
+                                    {
+                                        <option value="@cat.Id">@cat?.Label</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="MaterialId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="form-group mb-3">
+                                <label asp-for="Dimensions" class="control-label"></label>
+                                <input asp-for="Dimensions" data-rules="required:true" class="form-control" />
+                                <span asp-validation-for="Dimensions" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Color" class="control-label"></label>
+                                <input asp-for="Color" data-rules="required:true" class="form-control" />
+                                <span asp-validation-for="Color" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="form-group mb-3">
+                                <label asp-for="Warranty" class="control-label"></label>
+                                <input asp-for="Warranty" data-rules="required:true, number:true" class="form-control" />
+                                <span asp-validation-for="Warranty" class="text-danger"></span>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="SeatingCapacityId" class="control-label">Seating Capacity</label>
+                                @*<input asp-for="SeatingCapacityId" data-rules="required:true" class="form-control" />*@
+                                <select asp-for="SeatingCapacityId" data-rules="required:true" class="form-control">
+                                    <option value="">Select Seating Capacity</option>
+                                    @foreach (var cat in ViewBag.SeatingCapacity)
+                                    {
+                                        <option value="@cat.Id">@cat?.Label</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="SeatingCapacityId" class="text-danger"></span>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="ShapeId" class="control-label">Shape</label>
+                                @*<input asp-for="SeatingCapacityId" data-rules="required:true" class="form-control" />*@
+                                <select asp-for="ShapeId" data-rules="required:true" class="form-control">
+                                    <option value="">Select Shape</option>
+                                    @foreach (var cat in ViewBag.Shapes)
+                                    {
+                                        <option value="@cat.Id">@cat?.Label</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="SeatingCapacityId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="form-group mb-3">
+                                <label asp-for="AssemblyDetails" class="control-label"></label>
+                                <input asp-for="AssemblyDetails" data-rules="required:true" class="form-control" />
+                                <span asp-validation-for="AssemblyDetails" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="PackageDetails" class="control-label"></label>
+                                <input asp-for="PackageDetails" data-rules="required:true" class="form-control" />
+                                <span asp-validation-for="PackageDetails" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="step-controls d-flex justify-content-between">
+                            <div class="step-navs"></div>
+                            <div class="steppers">
+                                <button class="btn btn-info prev" type="button">Prev</button>
+                                <button class="btn btn-info next mx-2" type="button">Next</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="file-uploader-container" id="file-uploader"></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
     </div>
 </div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        //await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/js/fileuploader.js"></script>
+    <script src="~/lib/summernote-0.8.18-dist/summernote-bs4.min.js"></script>
+    <script src="~/lib/sweetalert.js"></script>
+    <script>
+        let product_images= @Html.Raw(JsonConvert.SerializeObject(Model.ProductImages.Select(x=>x.Image).ToList()));
+        let pImgs= product_images.map((c)=>{
+            let obj={};
+                for(let l in c){
+                   obj[lcFirst(l)]=c[l];
+                }
+                return {...obj};
+        });
+        function lcFirst(inputString) {
+            if (typeof inputString !== 'string' || inputString.length === 0) {
+                return inputString; // Return input as is if it's not a non-empty string
+            }
+
+            return inputString[0].toLowerCase() + inputString.slice(1);
+        }
+        function uploadImage(imgObj) {
+            let imageData = new FormData();
+            imageData.append("File", imgObj.file);
+            debugger;
+            setId = (image) => {
+                imgObj.id = image.imageId;
+            }
+            $.ajax({
+                url: "/File/Create",
+                method: "Post",
+                data: imageData,
+                //headers: {
+                contentType: false,
+                processData: false,
+                //},
+                success: function (data) {
+                    console.log("Image", data)
+                    //imageObj.id = data.imageId;
+                    setId(data);
+                },
+                error: function (xhr, data, status) {
+                    console.log("xhr", xhr);
+                    console.log("data", data);
+                    console.log("error", status);
+                }
+            });
+        }
+        //console.log("validatorplugin >", $.validator);
+        $(document).ready(() => {
+            $.validator.addMethod('summernoteRequired', function (value, element) {
+                // You can customize this validation logic based on your requirements
+                //console.log($(element).val());
+                return $(element).val().length > 0;
+            }, 'This field is required.');
+
+            $.validator.addMethod('summernoteMinLength', function (value, element, params) {
+                var content = $(value).summernote('code');
+                var text = $('<div>').html(content).text(); // Extract text content
+                return text.length >= params;
+            }, $.validator.format('Please enter at least {0} characters.'));
+
+            // Add custom validation method for maximum length
+            $.validator.addMethod('summernoteMaxLength', function (value, element, params) {
+                var content = $(value).summernote('code');
+                var text = $('<div>').html(content).text(); // Extract text content
+                return text.length <= params;
+            }, $.validator.format('Please enter no more than {0} characters.'));
+            let catId=$("#CategoryId").val();
+            
+        });
+        var f_steps = [];
+        var validationRules = {};
+        var validator = {};
+        $(document).ready(() => {
+            f_steps = Array.from(document.querySelectorAll(".step"));
+            let formObject = {};
+            let dots = f_steps.map((val, ind) => {
+                $(val).attr("data-id", ind);
+                var qs = Array.from(val.querySelectorAll('.form-control'));
+                qs.map(val => {
+                    let name = $(val).attr("name");
+                    formObject[name] = "step_" + ind;
+                });
+                return `<span class="dot ${ind == 0 ? 'active' : ''}" data-id="${ind}"></span>`
+            });
+            //console.log('formobject > ', formObject);
+            $(".step-navs").append(dots);
+            f_steps[0].classList.add("active");
+            $('.prev').attr("disabled", true);
+
+
+            $('[data-rules]').each(function () {
+                var fieldName = $(this).attr('name');
+                var fieldRules = $(this).data('rules');
+                let valObj = {};
+                fieldRules.split(",").map(val => {
+                    let rule = val.split(":");
+                    valObj[rule[0].trim()] = parseValue(rule[1].trim());
+                })
+                validationRules[fieldName] = valObj;
+            });
+
+            //  console.log('validation >' , validationRules);
+            validator = $("#productForm").validate({
+                rules: {
+                    ...validationRules
+                }
+            });
+            // added for fixing summernote editors error on validation
+            $('form').each(function () {
+                if ($(this).data('validator'))
+                    $(this).data('validator').settings.ignore = ".note-editor *";
+            });
+        });
+        // Next button click handler
+        $('.next').click(function () {
+            let self = this;
+            let active_page = $('.dot.active').data('id');
+            let len = Array.from(document.querySelectorAll(".step")).length;
+            let next_page = active_page < (len - 1) ? active_page + 1 : len - 1;
+            let isSubmit = $(".next").html() == "Submit";
+            if (next_page == (len - 1)) {
+                $(".next").html("Submit");
+            }
+
+            if (isSubmit) {
+                let fileCount = dragel.getFileCount();
+                //console.log("filecount",fileCount);
+                //console.log("filecount D >",dragel.getFile().length);
+
+                if (fileCount < 1) {
+                    swal("", "Please Select Product Images", "error");
+                    return;
+                } else {
+                    $(".next").attr('disabled', true);
+                    submitFrom().then().catch(() => {
+                        $(".next").attr('disabled', false);
+                    });
+                }
+            } else {
+                let pageInputs = $('.step.active').find('.form-control').valid();
+                //console.log("next_page", next_page);
+                if (pageInputs) {
+                    $('.step.active').removeClass('active');
+                    $('.dot.active').removeClass('error');
+                    $('.dot.active').removeClass('active');
+                    $(`.step[data-id="${next_page}"]`).addClass("active");
+                    $(`.dot[data-id="${next_page}"]`).addClass("active");
+                }
+                else {
+                    $('.dot.active').addClass("error");
+                }
+                if (Number(next_page) >= 1) {
+                    $('.prev').attr("disabled", false);
+                } else {
+                    $('.prev').attr("disabled", true);
+                }
+            }
+
+
+        });
+
+        //previous button click handler
+        $('.prev').click(function () {
+            let self = this;
+            let active_page = $('.dot.active').data('id');
+            //console.log("active page", active_page);
+            let prev_page = active_page < 1 ? 0 : active_page - 1;
+            parseInt(active_page) == 1 ? $('.prev').attr("disabled", true) : $('.prev').attr("disabled", false);;
+            $('.step.active').removeClass('active');
+            //$('.dot.active').removeClass('error');
+            $('.dot.active').removeClass('active');
+            $(`.step[data-id="${prev_page}"]`).addClass("active");
+            $(`.dot[data-id="${prev_page}"]`).addClass("active");
+            $(".next").html("Next");
+        })
+        var detailsEl = $('#Details');
+
+        $('#Details').summernote({
+            placeholder: 'Add Product Details',
+            tabsize: 2,
+            height: 100,
+            callbacks: {
+                onChange: function (contents, $editable) {
+                    // Note that at this point, the value of the `textarea` is not the same as the one
+                    // you entered into the summernote editor, so you have to set it yourself to make
+                    // the validation consistent and in sync with the value.
+                    detailsEl.val(detailsEl.summernote('isEmpty') ? "" : contents);
+                    // You should re-validate your element after change, because the plugin will have
+                    // no way to know that the value of your `textarea` has been changed if the change
+                    // was done programmatically.
+                    validator.element(detailsEl);
+                }
+            }
+        });
+        var highLightEl = $('#Highlights');
+        $('#Highlights').summernote({
+            placeholder: 'Add Product Highlights.',
+            tabsize: 2,
+            height: 100,
+            callbacks: {
+                onChange: function (contents, $editable) {
+                    // Note that at this point, the value of the `textarea` is not the same as the one
+                    // you entered into the summernote editor, so you have to set it yourself to make
+                    // the validation consistent and in sync with the value.
+                    highLightEl.val(highLightEl.summernote('isEmpty') ? "" : contents);
+                    //console.log("summernote ele high :", detailsEl.summernote('isEmpty'));
+                    // You should re-validate your element after change, because the plugin will have
+                    // no way to know that the value of your `textarea` has been changed if the change
+                    // was done programmatically.
+                    validator.element(highLightEl);
+                }
+            }
+        });
+        var dragel = new FileUploader({ id: "file-uploader", fileCount: 4, aspectRatio: 1, errorHandler: (msg) => swal("", msg, "error"), fileSelectEvent: uploadImage, images: [...pImgs] });
+    </script>
+
+    <script>
+
+        function submitFrom() {
+            return new Promise((resolve, reject) => {
+                if (!$("#productForm").valid()) {
+                    reject()
+                };
+                const formObj = {
+                    productId:$("#ProductId").val(),
+                    name: $("#Name").val(),
+                    description: $("#Description").val(),
+                    details: $("#Details").val(),
+                    highlights: $("#Highlights").val(),
+                    price: $("#Price").val(),
+                    emi: $("#Emi").val(),
+                    sizeId: $("#SizeId").val(),
+                    shapeId: $("#ShapeId").val(),
+                    brandId: $("#BrandId").val(),
+                    storageTypeId: $("#StorageTypeId").val(),
+                    materialId: $("#MaterialId").val(),
+                    rating: $("#Rating").val(),
+                    color: $("#Color").val(),
+                    assemblyDetails: $("#AssemblyDetails").val(),
+                    quantity: $("#Quantity").val(),
+                    warranty: $("#Warranty").val(),
+                    packageDetails: $("#PackageDetails").val(),
+                    categoryId: $("#CategoryId").val(),
+                    subCategoryId: $("#SubCategoryId").val(),
+                    discount: $("#Discount").val(),
+                    discountType: $("#DiscountType").val(),
+                    dimensions: $("#Dimensions").val(),
+                    seatingCapacityId: $("#SeatingCapacityId").val(),
+                    __RequestVerificationToken: $("[name='__RequestVerificationToken']").val()
+                }
+                var formData = toFormData(formObj)
+                dragel.getFile().map(x => formData.append("imageIds", x.id))
+                //var imgs = dragel.getFile().map(x => x.file)
+                //for (var i = 0; i < imgs.length; i++) {
+                //    formData.append("images", imgs[i])
+                //}
+
+                //console.log(formData, formObj)
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("Edit", "Products",new {id= Model.ProductId})', // Replace with your controller and action names
+                    data: formData,
+                    processData: false, // Set this to false when using FormData
+                    contentType: false, // Set this to false when using FormData
+                    success: function (data) {
+                        // Handle the response from the server, if needed
+                        //console.log(data);
+                        window.location.href = "/products";
+                    },
+                    error: function (errors) {
+                        // Handle any errors that occur during the Ajax request
+                        //console.log('Error:', errors);
+                        //for (var err in errors.responseJSON) {
+
+                        //    $(`#${err}`).parent().append(`<span class="text-danger field-validation-error" data-valmsg-for="${err}" data-valmsg-replace="true"><span id="${err}-error" class="">${errors.responseJSON[err]}</span></span>`)
+                        //}
+                        validator.showErrors(errors.responseJSON);
+                        reject();
+                    }
+                });
+            })
+        }
+
+        function toFormData(obj) {
+            const formData = new FormData();
+            for (const key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    formData.append(key, obj[key]);
+                }
+            }
+            return formData;
+        }
+        function parseValue(val) {
+            if (val === 'true' || val === 'false') {
+                return val === 'true';
+            } else if (!isNaN(Number(val))) {
+                return Number(val);
+            } else {
+                return val;
+            }
+        }
+
+        //render subcategory on Category change
+        $("#CategoryId").on('change', function (e) {
+            var catId = $(e.target).val();
+           getSubCategories(catId)
+        })
+
+        function getSubCategories(catId){
+            //retrun new Promise((resolve,reject)=>{
+            $.ajax({
+                url: "/categories/get-subcategories/" + catId,
+                success: function (result) {
+                    if (result.length > 0) {
+                        $.each(result, function (index, cat) {
+                            $("#SubCategoryId").append(
+                                `<option value="${cat?.categoryId}">${cat?.name}</option>`
+                            )
+                        })
+                    } else {
+                        $("#SubCategoryId").html(
+                            `<option value="">Select Sub Category</option>`
+                        )
+                    }
+
+                },
+                error: function (error) {
+                    console.log(error)
+                }
+            });
+            //});
+        }
+                //render subcategory on Category change
+    </script>
+
+
+}
+@section Styles {
+    <link href="~/lib/summernote-0.8.18-dist/summernote-bs4.min.css" rel="stylesheet" />
+    <style>
+        .navigation-dots {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .step {
+            display: none;
+        }
+
+            .step.active {
+                display: block;
+            }
+
+        div:has(.dot) .step-navs {
+            display: flex;
+            align-items: end;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            display: block;
+            border-radius: 50%;
+            background-color: gray;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+            .dot.active {
+                background-color: black;
+            }
+
+            .dot.error {
+                background-color: red;
+            }
+    </style>
 }

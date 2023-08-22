@@ -1,142 +1,58 @@
-﻿@model Domain.Models.Product
+﻿@using SofaFactory.Helper;
+@model Domain.Models.Product
 
 @{
     ViewData["Title"] = "Delete";
     Layout = "~/Views/Shared/_Shop_Layout.cshtml";
+    ViewBag.BreadcrumbTitle = " Delete";
+    ViewBag.PageTitle = "Product / Delete";
+    var method = ViewBag.Method == "Delete";
+    var p = Model;
 }
+<partial name="~/Views/Shared/_breadcrumb.cshtml" />
 
-<h1>Delete</h1>
+<div class="container-fluid px-5 py-5">
+    <h5>Are you sure you want to delete this?</h5>
+    <div class="row">
+        @{
+            var discount = p.DiscountType == Domain.Models.DiscountType.Flat ? p.Discount : (p.Price / 100) * p.Discount;
+            var amt = p.Price - (discount);
+            var discountRate = discount * 100 / (p.Price);
+            <div class="col-sm-6 col-md-4 col-lg-3">
+                <div class="product-cards mb-2 position-relative" data-id="fabric-rec-sofa-set" data-category="fabric 1-seater">
+                    <a href="/Products/Details/@p.ProductId">
+                        <img class="card-img-top p-2" src="@p.ProductImages.First().Image.Src" alt="Card image" style="width:100%">
+                    </a>
+                    <div class="card-body">
+                        <a class="sofa-sub-heads" href="/Products/Details/@p.ProductId">@p.Name</a>
+                        <p class="sofa-sub-head my-2">
+                            <strong>₹ @amt.ToString("0.00")</strong> &nbsp;&nbsp;
+                            <del>₹ @p.Price.ToString("0.00")</del> <strong class="text-success">&nbsp;&nbsp;@discountRate %</strong>
+                        </p>
+                        <p class="save-percent mb-1">You save ₹@discount.ToString("0.00")</p>
+                        <div class="checkout-rating mb-1">
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa-solid fa-star-half-stroke haif-unchecked"></span>
+                        </div>
+                        <a class="sofa-sub-head" href="">EMI from ₹@p.Emi.ToString("0.00")</a>
+                    </div>
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Product</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Details)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Details)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Discount)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Discount)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DiscountType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DiscountType)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Rating)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Rating)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Quantity)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Quantity)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Dimensions)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Dimensions)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Highlights)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Highlights)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Color)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Color)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Warranty)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Warranty)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.SeatingCapacity)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.SeatingCapacity)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AssemblyDetails)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AssemblyDetails)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PackageDetails)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PackageDetails)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Category)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Category.CreatedById)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.SubCategory)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.SubCategory.CreatedById)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedOn)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedOn)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UpdatedOn)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UpdatedOn)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedBy)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedBy.Id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UpdatedBy)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UpdatedBy.Id)
-        </dd>
-    </dl>
-    
+                    
+
+
+                </div>
+            </div>
+        }
+    </div>
+
     <form asp-action="Delete">
         <input type="hidden" asp-for="ProductId" />
+        @Html.AntiForgeryToken()
         <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <a class="btn btn-info" asp-action="Index">Back to List</a>
     </form>
 </div>
+

@@ -7,6 +7,7 @@ namespace SofaFactory.Models
 {
 	public class ProductVm
     {
+        public int ProductId { get; set; } = 0;
         public string Name { get; set; }
         public string Description { get; set; }
         public string Details { get; set; }
@@ -33,6 +34,7 @@ namespace SofaFactory.Models
         public string AssemblyDetails { get; set; }
         public string PackageDetails { get; set; }
         public List<IFormFile>? Images { get; set; }
+        public List<int>? ImageIds { get; set; }
     }
 }
 

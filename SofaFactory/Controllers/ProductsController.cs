@@ -13,6 +13,8 @@ using SofaFactory.Helper;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Microsoft.AspNetCore.Authorization;
+using Nelibur.ObjectMapper;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace SofaFactory.Controllers
 {
@@ -157,39 +159,20 @@ namespace SofaFactory.Controllers
         [Authorize(Roles = $"{Roles.Admin},{Roles.SubAdmin}")]
         public async Task<IActionResult> Create([FromForm] ProductVm modal)
         {
-            if (modal.Images==null|| modal.Images.Count < 1)
+            if (modal.ImageIds==null|| modal.ImageIds.Count < 1)
             {
                 Response.StatusCode = 422;
                 ModelState.AddModelError("Images", "Please upload atleast one product image.");
                 return Json(ModelState.ToSerializedDictionary());
             }
-            var product = new Product
-            {
-                Name = modal.Name,
-                Description = modal.Description,
-                Details = modal.Details,
-                CategoryId = modal.CategoryId,
-                SubCategoryId = modal.SubCategoryId,
-                Discount = modal.Discount,
-                Emi=modal.Emi,
-                Price=modal.Price,
-                DiscountType = modal.DiscountType,
-                Rating = modal.Rating,
-                Quantity = modal.Quantity,
-                Dimensions = modal.Dimensions,
-                Highlights = modal.Highlights,
-                Color = modal.Color,
-                Warranty = modal.Warranty,
-                SeatingCapacityId = modal.SeatingCapacityId,
-                SizeId=modal.SizeId,
-                ShapeId=modal.ShapeId,
-                BrandId=modal.BrandId,
-                StorageTypeId=modal.StorageTypeId,
-                MaterialId=modal.MaterialId,
-                AssemblyDetails = modal.AssemblyDetails,
-                PackageDetails = modal.PackageDetails,
-                CreatedOn = DateTime.Now
-            };
+            var user = _context.AppUsers.Where(c => c.UserName == User.Identity.Name).FirstOrDefault();
+            var product = new Product();
+            TinyMapper.Bind<ProductVm, Product>();
+            product = TinyMapper.Map<Product>(modal);
+            product.UpdatedOn = DateTime.Now;
+            product.CreatedOn = DateTime.Now;
+            product.CreatedBy = user;
+            product.UpdatedBy = user;
             if (!ModelState.IsValid)
             {
                 Response.StatusCode = 422;
@@ -198,27 +181,9 @@ namespace SofaFactory.Controllers
             _context.Add(product);
             await _context.SaveChangesAsync();
             var imgPath = Path.Combine(environment.WebRootPath, "assets", "images", "products");
-            if (modal.Images.Count >0)
+            if (modal.ImageIds.Count >0)
             {
-                var imgUrl = await FileHelper.SaveFilesAsync(modal.Images, imgPath);
-                var imgs = new List<ProductImage>();
-                for(var i = 0; i<modal.Images.Count; i++)
-                {
-
-                    imgs.Add(new ProductImage
-                    {
-                        Image = new Image
-                        {
-                            Src = imgUrl[i],
-                            Alt = "Product Image",
-                            CreatedOn = DateTime.Now
-                        },
-                        ProductId = product.ProductId,
-                        Rank = i+1
-                    });
-                }
-                _context.ProductImages.AddRange(imgs);
-                await _context.SaveChangesAsync();
+                await SaveProductImage(modal, product.ProductId);
             }
             return Ok("Success");
             
@@ -238,15 +203,12 @@ namespace SofaFactory.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Products.FindAsync(id);
+            var product = await _context.Products.Include(c=>c.ProductImages).ThenInclude(p=>p.Image).Where(c=>c.ProductId==id).FirstAsync();
             if (product == null)
             {
                 return NotFound();
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CreatedById", product.CategoryId);
-            ViewData["CreatedById"] = new SelectList(_context.Set<AppUser>(), "Id", "Id", product.CreatedById);
-            ViewData["SubCategoryId"] = new SelectList(_context.Categories, "CategoryId", "CreatedById", product.SubCategoryId);
-            ViewData["UpdatedById"] = new SelectList(_context.Set<AppUser>(), "Id", "Id", product.UpdatedById);
+            await SetEditViewData(product);
             return View(product);
         }
 
@@ -256,23 +218,39 @@ namespace SofaFactory.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = $"{Roles.Admin},{Roles.SubAdmin}")]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductId,Name,Description,Details,CategoryId,SubCategoryId,Discount,DiscountType,Rating,Quantity,Dimensions,Highlights,Color,Warranty,SeatingCapacity,AssemblyDetails,PackageDetails,CreatedOn,UpdatedOn,CreatedById,UpdatedById")] Product product)
+        public async Task<IActionResult> Edit(int id,  ProductVm pm)
         {
-            if (id != product.ProductId)
+            if (id != pm.ProductId)
             {
                 return NotFound();
             }
 
+            var based = await _context.Products.AsNoTracking().Where(c => c.ProductId == id).Include(l => l.ProductImages).ThenInclude(l => l.Image).FirstOrDefaultAsync();
+            var product = new Product();
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(product);
+                    TinyMapper.Bind<ProductVm, Product>();
+                     product = TinyMapper.Map<Product>(pm);
+                    _context.Entry(product).State = EntityState.Modified;
+                    product.UpdatedOn=DateTime.Now;
+                    product.CreatedOn = based.CreatedOn;
+                    product.CreatedById=based.CreatedById;
+                    product.UpdatedBy = _context.AppUsers.Where(c=>c.UserName== User.Identity.Name).FirstOrDefault();
+                   // _context.Update(product);
                     await _context.SaveChangesAsync();
+                    _context.SaveChanges();
+                    if (pm.ImageIds.Count > 0)
+                    {
+                        var prodImg = _context.ProductImages.Where(c => c.ProductId == product.ProductId).ToList();
+                        _context.ProductImages.RemoveRange(prodImg);
+                        await SaveProductImage(pm, based.ProductId);
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProductExists(product.ProductId))
+                    if (!ProductExists(pm.ProductId))
                     {
                         return NotFound();
                     }
@@ -283,11 +261,8 @@ namespace SofaFactory.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CreatedById", product.CategoryId);
-            ViewData["CreatedById"] = new SelectList(_context.Set<AppUser>(), "Id", "Id", product.CreatedById);
-            ViewData["SubCategoryId"] = new SelectList(_context.Categories, "CategoryId", "CreatedById", product.SubCategoryId);
-            ViewData["UpdatedById"] = new SelectList(_context.Set<AppUser>(), "Id", "Id", product.UpdatedById);
-            return View(product);
+            await SetEditViewData(product);
+            return View(based);
         }
 
         // GET: Products/Delete/5
@@ -299,7 +274,8 @@ namespace SofaFactory.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Products
+            var product = await _context.Products.Include(c=>c.ProductImages)
+                .ThenInclude(m=>m.Image)
                 .Include(p => p.Category)
                 .Include(p => p.CreatedBy)
                 .Include(p => p.SubCategory)
@@ -382,6 +358,32 @@ namespace SofaFactory.Controllers
                 Sizes = _context.Sizes.Select(c => c.Label).ToList(),
                 StorageTypes = _context.StorageTypes.Select(x => x.Label).ToList(),
             };
+        }
+        private async Task SetEditViewData(Product product)
+        {
+            ViewData["CategoryId"] = await _context.Categories.Where(x => x.ParentId == null).ToListAsync();
+            ViewData["SubCategoryId"] = await _context.Categories.Where(x => x.ParentId == product.CategoryId).ToListAsync();
+            ViewData["SizeId"] = await _context.Sizes.ToListAsync();
+            ViewData["MaterialId"] = await _context.Materials.ToListAsync();
+            ViewData["StorageTypeId"] = await _context.StorageTypes.ToListAsync();
+            ViewData["SeatingCapacity"] = await _context.SeatingCapacities.ToListAsync();
+            ViewData["Brands"] = await _context.Brands.ToListAsync();
+            ViewData["Shapes"] = await _context.Shapes.ToListAsync();
+        }
+        private async Task SaveProductImage(ProductVm pm,int productId)
+        {
+           var prodImg = new List<ProductImage>();
+            foreach (var im in pm.ImageIds)
+            {
+                var p = new ProductImage()
+                {
+                    ProductId = productId,
+                    ImageId = im,
+                };
+                prodImg.Add(p);
+            }
+            _context.AddRange(prodImg);
+            _context.SaveChanges();
         }
     }
 }

@@ -80,6 +80,33 @@ function getImageDimensions(file) {
     });
 }
 
+function getImgFile(path) {
+    return new Promise((resolve, reject) => {
+        let filename = getFileNameFromPath(path);
+        fetch(path)
+            .then(response => response.blob())
+            .then(blob => {
+                // Create a File object from the Blob
+                const file = new File([blob], filename, { type: blob.type });
+
+                // You can now use the 'file' object as needed
+                console.log('File object:', file);
+                resolve(file)
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                reject(error);
+            });
+    });
+}
+function getFileNameFromPath(filePath) {
+    // Split the path using the '/' delimiter and get the last element
+    const parts = filePath.split('/');
+    const fileName = parts[parts.length - 1];
+
+    // Return the extracted file name
+    return fileName;
+}
 function validateFileType(file) {
     var validTypes = new Set(['jpeg', 'jpg', 'webp', 'png', 'svg']);
     var fileName = file.name;
@@ -123,17 +150,18 @@ function validateAspectRatio(fileInput, expectedAspectRatio) {
 
 class FileUploader {
        constructor(_opt) {
-           let opt = { id: "", fileCount: 5, aspectRatio: 1, errorHandler: undefined, imageDimension: undefined , ..._opt }
+           let opt = { id: "", fileCount: 5, aspectRatio: 1, errorHandler: undefined, imageDimension: undefined,fileSelectEvent:undefined ,images:undefined, ..._opt }
         this.elementId = opt.id;
         this.files = [];
+        this.images=opt.images;
         this.errorHandler = opt.errorHandler;
         this.fileCount = opt.fileCount;
-           
+        this.fileSelectEvent = opt.fileSelectEvent;
         this.fileIp = document.querySelector(`#${opt.id}`);
-           this.renderUi(this.init);
-           this.height = opt.imageDimension?.height;
-           this.width = opt.imageDimension?.width;
-           this.aspectRatio = opt.imageDimension?.width && opt.imageDimension?.height ? opt.imageDimension.width / opt.imageDimension.height: opt.aspectRatio;
+        this.renderUi(this.init);
+        this.height = opt.imageDimension?.height;
+        this.width = opt.imageDimension?.width;
+        this.aspectRatio = opt.imageDimension?.width && opt.imageDimension?.height ? opt.imageDimension.width / opt.imageDimension.height: opt.aspectRatio;
     }
     init(self) {
         self.input = self.fileIp.querySelector("#file-input");
@@ -147,7 +175,9 @@ class FileUploader {
         self.btn.addEventListener("click", () => self.input.click());
         self.input.addEventListener("change", (e) => self.handleFileSelect(e));
         console.log("label_c > ", self.label);
+     
     }
+
     async renderUi(initialize) {
         document.querySelector('head').append(fp_styles);
         this.fileIp.innerHTML = `
@@ -160,8 +190,29 @@ class FileUploader {
 `;
         this.fileIp.classList.add("file-uploader-container");
 
-        setTimeout(()=>initialize(this), 500);
-    
+        setTimeout(() => initialize(this), 500);
+        if (this.images && this.images.length > 0) {
+            let self = this;
+            let fn = async function () {
+                for (let i = 0; i < self.images.length; i++) {
+                    let imageFile = {};
+                    try {
+                        debugger;
+                        imageFile = await getImgFile(self.images[i].src);
+                        //  self.renderFile();
+                        let f = { file: imageFile, id: self.images[i].imageId, name: imageFile.name };
+                        self.files.push(f);
+                        self.createFilePreview(f)
+                    } catch (e) {
+                        console.error("file render error :", e)
+                    }
+
+                }
+            }
+            debugger;
+            setTimeout(fn , 1000)
+        }
+        
     }
     getFile() {
         return this.files;
@@ -169,6 +220,7 @@ class FileUploader {
     getFileCount() {
         return this.files.length;
     }
+    
     handleFileSelect(e) {
         this.handleFiles(e.target.files);
         setTimeout(() => { e.target.value = null }, 1000)
@@ -228,8 +280,11 @@ class FileUploader {
             let dim = await getImageDimensions(file);
             if (validtype && validshape) {
                 let f = { "name": file.name, file: file, id: length == 0 ? length + 1 : this.files[length - 1].id + 1 };
-                this.files.push(f);
                 this.createFilePreview(f);
+                if (this.fileSelectEvent ) {
+                    this.fileSelectEvent(f);
+                }
+                this.files.push(f);
             }
             else {
                 if (!validtype) {
