@@ -7,6 +7,7 @@ namespace SofaFactory.Models
     {
         public int CategoryId { get; set; }
         public int? ParentId { get; set; }
+        public int? ImageId { get; set; }
         [Required]
         public string Name { get; set; }
         [Required]

@@ -1,70 +1,163 @@
-﻿@model Domain.Models.Category
+﻿@using System.Text.Json;
+
+@model Domain.Models.Category
 
 @{
     ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_Shop_Layout.cshtml";
+    var catId = ViewBag.CategoryId;
 }
 
-<h1>Edit</h1>
 
-<h4>Category</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="container py-5">
+    <div class="card">
+        <div class="card-header"><h5 class="my-0">Edit - @Model.Name</h5></div>
+        <div class="card-body">
+            <form action="/Categories/Edit/@Model.CategoryId" method="post" id="my-cat" enctype="multipart/form-data">
             <input type="hidden" asp-for="CategoryId" />
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ImageId" class="control-label"></label>
-                <select asp-for="ImageId" class="form-control" asp-items="ViewBag.ImageId"></select>
-                <span asp-validation-for="ImageId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ParentId" class="control-label"></label>
-                <input asp-for="ParentId" class="form-control" />
-                <span asp-validation-for="ParentId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedOn" class="control-label"></label>
-                <input asp-for="CreatedOn" class="form-control" />
-                <span asp-validation-for="CreatedOn" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UpdatedOn" class="control-label"></label>
-                <input asp-for="UpdatedOn" class="form-control" />
-                <span asp-validation-for="UpdatedOn" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedById" class="control-label"></label>
-                <select asp-for="CreatedById" class="form-control" asp-items="ViewBag.CreatedById"></select>
-                <span asp-validation-for="CreatedById" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UpdatedById" class="control-label"></label>
-                <select asp-for="UpdatedById" class="form-control" asp-items="ViewBag.UpdatedById"></select>
-                <span asp-validation-for="UpdatedById" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+            @Html.AntiForgeryToken()
+            <input asp-for="ParentId" value="@catId" class="d-none" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-6">
+
+                        <div class="form-group ">
+                            <label asp-for="Name" class="control-label"></label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="form-group my-3">
+                            <label asp-for="Description" class="control-label"></label>
+                            <textarea asp-for="Description" class="form-control"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-6 d-none">
+                            <label asp-for="ParentId" class="control-label"></label>
+                            <input asp-for="ParentId" class="form-control" value="0" />
+                            <span asp-validation-for="ParentId" class="text-danger"></span>
+                        </div>
+                        @*<div class="col-md-6 p-3">
+                        <div class="w-100 image-uploader">
+                        <div class="image-input">
+                        <div class="image-icon-container">
+                        <i class="fa fa-image" id="image-selector" data-toggle="tooltip" title="Choose Uploaded Image" style="cursor:pointer"></i>
+                        </div>
+                        <div class="uploader-icon-container">
+                        <i class="fa fa-file-upload" id="image-uploader" data-toggle="tooltip" title=" Upload new Image" style="color:slategrey;font-size:84px;cursor:pointer"></i>
+                        </div>
+                        </div>
+                        <div class="image-display"></div>
+                        </div>
+                        </div>*@
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Image" class="control-label"></label>
+                        <input type="file" name="Image" required asp-for="Image" class="image-control d-none" id="Image" />
+                        <div class="file-uploader-container" id="file-uploader"></div>
+                    </div>
+
+                    <div class="form-group col-md-6 pt-3">
+                        <input type="button" value="Update" id="submit-btn" class="btn btn-primary mt-3" />
+                    </div>
+                </div>
             </div>
         </form>
+
+        </div>
+        @*<div class="card-footer"></div>*@
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/js/fileuploader.js"></script>
+    <script>
+        let catImage = [@Html.Raw(JsonSerializer.Serialize(Model.Image,new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }))];
+        var dragel = new FileUploader({ id: "file-uploader", fileCount: 1, aspectRatio: 1, errorHandler: (msg) => swal("", msg, "error"),images:catImage });
+        //my-cat
+
+        $("#submit-btn").click(function () {
+
+            let valid = $("#my-cat").valid();
+            let isValidFile = dragel.getFile().length > 0;
+            if (valid && isValidFile) {
+                var container = new DataTransfer();
+                dragel.getFile().map(c => container.items.add(c.file));
+                //console.log("files", container);
+                let fileInputElement = document.getElementById('Image');
+                fileInputElement.files = container.files
+                $("#my-cat").submit();
+            } else {
+                if (!isValidFile) {
+                    $("#Image").removeClass("error");
+                    $("#Image").parent().find('.error-msg').remove();
+                    $("#Image").addClass("error");
+                    $("#Image").parent().append(`<span class="error-msg">Please select valid Image file<span>`)
+                }
+            }
+        })
+    </script>
+}
+@section Styles{
+    <style>
+        i.fa.fa-image {
+            font-size: 96px;
+            color: slategrey;
+        }
+
+        input.error {
+            border: 1px solid red;
+        }
+
+        .w-100.image-uploader {
+            padding: 5px;
+            border: 2px dotted slategrey;
+            border-radius: 10px;
+        }
+
+        .image-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .input-validation-error {
+            border: 1px solid #dc3545;
+        }
+
+        .image-control {
+            display: block;
+            width: 100%;
+            /* height: calc(1.5em + px + 2px);*/
+            padding: 0px;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #fff;
+            background-clip: padding-box;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+        }
+
+        input::file-selector-button {
+            background: linear-gradient(#eeeeee, #ededed,#eeeeee );
+            border: unset;
+            border-radius: 0px;
+            height: calc(1.5em + 0.75rem + 2px);
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        span.error-msg {
+            color: #dc3545;
+        }
+
+    </style>
 }
