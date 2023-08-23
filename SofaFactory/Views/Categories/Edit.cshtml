@@ -75,6 +75,7 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script src="~/lib/sweetalert.js"></script>
     <script src="~/js/fileuploader.js"></script>
     <script>
         let catImage = [@Html.Raw(JsonSerializer.Serialize(Model.Image,new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }))];

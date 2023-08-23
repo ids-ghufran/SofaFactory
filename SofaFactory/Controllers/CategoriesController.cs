@@ -208,7 +208,7 @@ namespace SofaFactory.Controllers
                     {                        
                         category.Image.CopyTo(fs);
                     }
-                    cat.Image.Src = Path.GetRelativePath("wwwRoot",path);
+                    cat.Image.Src ="/"+ Path.GetRelativePath("wwwRoot",path).Replace("\\","/");
                 }
                 try
                 {
