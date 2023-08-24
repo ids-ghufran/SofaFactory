@@ -134,10 +134,12 @@
                             <div class="card-body">
                                 <a class="sofa-sub-heads" href="/Products/Details/@p.ProductId">@p.Name</a>
                                 <p class="sofa-sub-head my-2">
-                                    <strong>₹ @amt.ToString("0.00")</strong> &nbsp;&nbsp;
-                                    <del>₹ @p.Price.ToString("0.00")</del> <strong class="text-success">&nbsp;&nbsp;@discountRate %</strong>
+                                    <strong>₹ @amt?.ToString("0.00")</strong> @Html.Raw("&nbsp;&nbsp;")
+                                    @if(p.Discount!=0){
+                                    <del>₹ @p.Price.ToString("0.00")</del> <strong class="text-success"> @Html.Raw("&nbsp;&nbsp;")@discountRate %</strong>
+                                    }
                                 </p>
-                                <p class="save-percent mb-1">You save ₹@discount.ToString("0.00")</p>
+                                <p class="save-percent mb-1">You save ₹@discount?.ToString("0.00")</p>
                                 <div class="checkout-rating mb-1">
                                     <span class="fa fa-star checked"></span>
                                     <span class="fa fa-star checked"></span>
@@ -145,7 +147,11 @@
                                     <span class="fa fa-star checked"></span>
                                     <span class="fa-solid fa-star-half-stroke haif-unchecked"></span>
                                 </div>
-                                <a class="sofa-sub-head" href="">EMI from ₹@p.Emi.ToString("0.00")</a>
+                                @if(p.Emi!=null){
+                                <a class="sofa-sub-head" href="">EMI from ₹@p.Emi?.ToString("0.00")</a>
+                                }else{
+                                <span class="sofa-sub-head">EMI Not Applicable</span>
+                                }
                             </div>
                             
                             @if(User.Identity.IsAuthenticated && (User.IsInRole(Roles.Admin) || User.IsInRole(Roles.SubAdmin)))

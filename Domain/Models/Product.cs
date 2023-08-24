@@ -21,11 +21,11 @@ namespace Domain.Models
         public int CategoryId { get; set; }
         public int BrandId { get; set; }
         [ForeignKey("SubCategory")]
-        public int SubCategoryId { get; set; }
-        public decimal Discount { get; set; }
+        public int? SubCategoryId { get; set; }
+        public decimal? Discount { get; set; }
         public decimal Price { get; set; }
-        public decimal Emi { get; set; }
-        public DiscountType DiscountType { get; set; }
+        public decimal? Emi { get; set; }
+        public DiscountType? DiscountType { get; set; }
         public decimal Rating { get; set; }
         public int Quantity { get; set; }
         public string Dimensions { get; set; }
@@ -44,16 +44,17 @@ namespace Domain.Models
         public Category? Category { get; set; }
         public Category? SubCategory { get; set; }
         public Brand? Brand { get; set; }
-        public int StorageTypeId { get; set; }
-        public StorageType StorageType { get; set; }
-        public int SizeId { get; set; }
-        public Size Size { get; set; }
+        public int? StorageTypeId { get; set; }
+        public StorageType? StorageType { get; set; }
+        public int? SizeId { get; set; }
+        public Size? Size { get; set; }
         public Shape Shape { get; set; }
      }
   
     public enum DiscountType {
     Flat=1,
-    Percent
+    Percent,
+    NA
     }
    
     

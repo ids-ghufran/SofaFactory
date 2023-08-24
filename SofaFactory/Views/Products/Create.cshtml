@@ -53,7 +53,7 @@
                                  </div>
                                   <div class="form-group">
                                     <label asp-for="SubCategoryId"  class="control-label"></label>
-                                    <select asp-for="SubCategoryId" data-rules="required:true" class="form-control">
+                                    <select asp-for="SubCategoryId"  class="form-control">
                                 <option value="">Select Sub Category</option>
                                         @*@foreach (var cat in ViewBag.CategoryId)
                                         {
@@ -71,22 +71,23 @@
                             </div>
                             <div class="form-group mb-3">
                                 <label asp-for="Emi" class="control-label"></label>
-                                <input asp-for="Emi" data-rules="required:true,number:true" class="form-control" />
+                                <input asp-for="Emi" data-rules="number:true" class="form-control" />
                                 <span asp-validation-for="Emi" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="step">
                             <div class="form-group mb-3">
                                      <label asp-for="Discount" class="control-label"></label>
-                                <input asp-for="Discount" data-rules="required:true,number:true" class="form-control" />
+                                <input asp-for="Discount" data-rules="number:true" class="form-control" />
                                     <span asp-validation-for="Discount" class="text-danger"></span>
                                  </div>
                                    <div class="form-group">
                                         <label asp-for="DiscountType" class="control-label"></label>
-                                <select name="DiscountType" data-rules="required:true" class="form-control" id="DiscountType">
+                                <select name="DiscountType"  class="form-control" id="DiscountType">
                                             <option value="">Select Discount Type</option>
                                             <option value="1">Flat</option>
                                             <option value="2">Percent</option>
+                                            <option value="3">NA</option>
                                         </select>
                                         <span asp-validation-for="DiscountType" class="text-danger"></span>
                                  </div>
@@ -106,7 +107,7 @@
                         <div class="step">
                             <div class="form-group mb-3">
                                 <label for="SizeId" class="control-label">Size</label>
-                                <select asp-for="SizeId" data-rules="required:true" class="form-control" >
+                                <select asp-for="SizeId"  class="form-control" >
                                     <option value="">Select Size</option>
                                     @foreach (var cat in ViewBag.SizeId)
                                     {
@@ -130,7 +131,7 @@
                         <div class="step">
                             <div class="form-group mb-3">
                                 <label for="StorageTypeId" class="control-label">Storage Type</label>
-                                <select asp-for="StorageTypeId" data-rules="required:true" class="form-control" >
+                                <select asp-for="StorageTypeId"  class="form-control" >
                                     <option value="">Select Storage Type</option>
                                     @foreach (var cat in ViewBag.StorageTypeId)
                                     {
@@ -435,6 +436,8 @@
                 if (!$("#productForm").valid()) {
                     reject()
                 };
+                let discount=$("#Discount").val();
+                let discountType = $("#DiscountType").val();
                 const formObj = {
                     name: $("#Name").val(),
                     description: $("#Description").val(),
@@ -455,8 +458,8 @@
                     packageDetails: $("#PackageDetails").val(),
                     categoryId: $("#CategoryId").val(),
                     subCategoryId: $("#SubCategoryId").val(),
-                    discount: $("#Discount").val(),
-                    discountType: $("#DiscountType").val(),
+                    discount: discount == ''?0: discount,
+                    discountType: discountType == ''?3: discountType,
                     dimensions: $("#Dimensions").val(),
                     seatingCapacityId: $("#SeatingCapacityId").val(),
                 }
@@ -520,7 +523,7 @@
                 url: "/categories/get-subcategories/" + catId,
                 success: function (result) {
                     if (result.length > 0) {
-                        $.each(result, function (index, cat) {
+                          $.each(result, function (index, cat) {
                             $("#SubCategoryId").append(
                                 `<option value="${cat?.categoryId}">${cat?.name}</option>`
                             )

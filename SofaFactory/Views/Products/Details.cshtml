@@ -89,8 +89,11 @@
                         var discountRate = discount * 100 / (Model.Price);
                     }
                     <p class="sofa-sub-head my-2">
-                        <strong>₹ @amt </strong> &nbsp;&nbsp;
-                        <del>₹ @Model.Price </del>&nbsp; <strong class="text-success">@discountRate %</strong>
+                        <strong>₹ @amt </strong> @Html.Raw("&nbsp;&nbsp;")
+                        @if (Model.Discount != 0)
+                        {
+                            <del>₹ @Model.Price </del>  @Html.Raw("&nbsp;") <strong class="text-success">@discountRate %</strong>
+                        }
                     </p>
 
 
@@ -185,11 +188,13 @@
                             <p class="contain-heading"><strong>Material</strong> </p>
                             <p class="pl-5">@Model.Material.Label</p>
                         </div>
-
-                        <div class="p-discription mb-3 d-flex">
+                    @if (Model.SubCategory != null)
+                    {
+                    <div class="p-discription mb-3 d-flex">
                             <p class="contain-heading"><strong>SubCategory</strong></p>
                             <p class="pl-5">@Model.SubCategory.Name</p>
-                        </div>
+                        </div>     
+                    }
 
                         <div class="p-discription mb-3 d-flex">
                             <p class="contain-heading"><strong>Seating capacity</strong></p>
