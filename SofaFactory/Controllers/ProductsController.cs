@@ -100,6 +100,7 @@ namespace SofaFactory.Controllers
                 .Include(p => p.SubCategory).Include(p => p.UpdatedBy);
             var count = applicationDbContext.Count();
             SetViewBag();
+            ViewBag.BreadcrumbTitle = category;
             var pagemodel = new PaginationModel<Product>()
             {
                 Model = await Paginate(applicationDbContext,page,pageLength)   .ToListAsync(),

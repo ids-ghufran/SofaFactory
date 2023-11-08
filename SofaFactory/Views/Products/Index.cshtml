@@ -3,8 +3,8 @@
 @{
     ViewData["Title"] = "Products";
     Layout = "~/Views/Shared/_Shop_Layout.cshtml";
-    ViewBag.BreadcrumbTitle = "All Products";
-    ViewBag.PageTitle = "All Products";
+    ViewBag.BreadcrumbTitle = ViewBag.BreadcrumbTitle??"All Products";
+    ViewBag.PageTitle = ViewBag.PageTitle ?? "All Products";
     var method = ViewBag.Method == "Index" ? "Index" : "category";
     var path = "/Products/" + method;
     var pages = Math.Ceiling((decimal)(Model.Count / Model.PageLength));
