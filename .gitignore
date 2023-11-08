@@ -366,7 +366,7 @@ FodyWeavers.xsd
 
 
 #custom ignore files
-appsettings.json
+#appsettings.json
 
 
 /SofaFactory/wwwroot/uploads
