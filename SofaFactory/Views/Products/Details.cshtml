@@ -5,6 +5,7 @@
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Shop_Layout.cshtml";
     ViewBag.Title = "| Products | " + Model.Name;
+    var warrantyInYear = Model.Warranty/12;
 }
 
 <div class="container-fluid mt-5 mb-5">
@@ -171,7 +172,13 @@
 
                         <div class="p-discription mb-3 d-flex">
                             <p class="contain-heading"><strong>Warranty</strong></p>
-                            <p class="pl-5">@Model.Warranty Month</p>
+                            <p class="pl-5">@warrantyInYear @{
+                                    if(warrantyInYear > 1){
+                                        <span>Years</span>
+                                    }else{
+                                        <span>Year</span>
+                                    }
+                                }</p>
                         </div>
 
                         <div class="p-discription mb-3 d-flex">
