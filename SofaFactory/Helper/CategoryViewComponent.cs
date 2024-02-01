@@ -12,7 +12,7 @@ namespace SofaFactory.Helper
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var items = _context.Categories.ToList();
+            var items = _context.Categories.Where(x => x.ParentId == null).ToList();
             return View(items);
         }
 

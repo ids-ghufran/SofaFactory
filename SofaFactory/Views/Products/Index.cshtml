@@ -7,7 +7,10 @@
     ViewBag.PageTitle = ViewBag.PageTitle ?? "All Products";
     var method = ViewBag.Method == "Index" ? "Index" : "category";
     var path = "/Products/" + method;
-    var pages = Math.Ceiling((decimal)(Model.Count / Model.PageLength));
+    decimal count = Convert.ToDecimal(Model.Count);
+    decimal pageLength = Convert.ToDecimal(Model.PageLength);
+
+    var pages = Math.Ceiling(count / pageLength);
     var formUrl = path +(string) ViewBag.QueryString;
     var ch= "";
 }
@@ -134,8 +137,9 @@
                             <div class="card-body">
                                 <a class="sofa-sub-heads" href="/Products/Details/@p.ProductId">@p.Name</a>
                                 <p class="sofa-sub-head my-2">
-                                    <strong>₹ @amt?.ToString("0.00")</strong> @Html.Raw("&nbsp;&nbsp;")
+                                    <strong>₹ @amt?.ToString("0.00") &comma;</strong> @Html.Raw("&nbsp;&nbsp;")
                                     @if(p.Discount!=0){
+                                        
                                     <del>₹ @p.Price.ToString("0.00")</del> <strong class="text-success"> @Html.Raw("&nbsp;&nbsp;")@discountRate %</strong>
                                     }
                                 </p>
