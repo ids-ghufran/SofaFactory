@@ -175,24 +175,27 @@
                 }
             </div>
 
-            @if(pages > 1)
+           @if (pages > 1)
+{
+    var prevUrl = path + QueryStringHelper.UpdateQueryStringParameters(ViewBag.QueryString, new Dictionary<string, string>() { { "page", (Model.Page - 1).ToString() } });
+    var nextUrl = path + QueryStringHelper.UpdateQueryStringParameters(ViewBag.QueryString, new Dictionary<string, string>() { { "page", (Model.Page + 1).ToString() } });
+        var nextDisabled = Model.Page == pages?"disabled":"";
+        var prevDisabled = Model.Page == 1?"disabled":"";
+    <div class="d-flex justify-content-end align-items-center">
+        <ul class="pagination">
+            <li class="page-item @prevDisabled"><a class="page-link" href="@prevUrl"><i class="fa fa-angle-left"></i> </a></li>
+            @for (var i = 1; i <= pages; i++)
             {
-                var prevUrl = path+ QueryStringHelper.UpdateQueryStringParameters(ViewBag.QueryString, new Dictionary<string, string>() { { "page", (Model.Page - 1).ToString() } });
-                var nextUrl = path+ QueryStringHelper.UpdateQueryStringParameters(ViewBag.QueryString, new Dictionary<string, string>() { { "page", (Model.Page + 1).ToString() } });
-                <div class="d-flex justify-content-end align-items-center">
-                    <ul class="pagination">
-                        <li class="page-item"><a class="page-link" href="@prevUrl"><i class="fa fa-angle-left"></i> </a></li>
-                        @for(var i = 1; i <= pages; i++)
-                        {
-                            var actve = Model.Page == i ? "active" : "";
-                            var pageUrl = path + QueryStringHelper.UpdateQueryStringParameters(ViewBag.QueryString, new Dictionary<string, string>() { { "page", (Model.Page + 1).ToString() } });
-                            <li class="page-item"><a class="page-link @actve" href="@pageUrl">@i</a></li>
-                        }
-
-                        <li class="page-item"><a class="page-link" href="@nextUrl"><i class="fa fa-angle-right"></i></a></li>
-                    </ul>
-                </div>
+                var active = Model.Page == i ? "active" : "";
+                var pageUrl = path + QueryStringHelper.UpdateQueryStringParameters(ViewBag.QueryString, new Dictionary<string, string>() { { "page", i.ToString() } });
+                <li class="page-item"><a class="page-link @active" href="@pageUrl">@i</a></li>
             }
+
+            <li class="page-item @nextDisabled"><a class="page-link" href="@nextUrl"><i class="fa fa-angle-right"></i></a></li>
+        </ul>
+    </div>
+}
+
         </div>
     </div>
 </div>
