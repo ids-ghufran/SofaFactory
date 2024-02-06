@@ -4,6 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+	  
     <UserSecretsId>aspnet-SofaFactory-3363e66c-8bc9-4c0a-885f-6652f2ca7a98</UserSecretsId>
   </PropertyGroup>
 
