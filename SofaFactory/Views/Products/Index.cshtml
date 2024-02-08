@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Shop_Layout.cshtml";
     ViewBag.BreadcrumbTitle = ViewBag.BreadcrumbTitle??"All Products";
     ViewBag.PageTitle = ViewBag.PageTitle ?? "All Products";
-    var method = ViewBag.Method == "Index" ? "Index" : "category";
+    var method = ViewBag.Method == "Index" ? "Index" : ViewBag.Method;
     var path = "/Products/" + method;
     decimal count = Convert.ToDecimal(Model.Count);
     decimal pageLength = Convert.ToDecimal(Model.PageLength);

@@ -87,7 +87,7 @@ namespace SofaFactory.Controllers
             ViewBag.Sizes = sizes;
             ViewBag.StorageTypes = storageTypes;
             ViewBag.SeatingCapacities = sc;
-            ViewBag.Method = "Index";
+            ViewBag.Method = "category/"+category;
             var applicationDbContext = _context.Products.Where(c=>c.Category.Name==category).AsQueryable();
             if (query != null)
             {
