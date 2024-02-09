@@ -227,7 +227,9 @@ namespace SofaFactory.Controllers
                 return NotFound();
             }
 
-            var based = await _context.Products.AsNoTracking().Where(c => c.ProductId == id).Include(l => l.ProductImages).ThenInclude(l => l.Image).FirstOrDefaultAsync();
+            var based = await _context.Products.Include(x => x.Category).AsNoTracking().Where(c => c.ProductId == id).Include(l => l.ProductImages).ThenInclude(l => l.Image).FirstOrDefaultAsync();
+
+            var catName = Uri.EscapeUriString(based.Category.Name);
             var product = new Product();
             if (ModelState.IsValid)
             {
@@ -261,7 +263,7 @@ namespace SofaFactory.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return Ok(catName);
             }
             await SetEditViewData(product);
             return View(based);
@@ -300,14 +302,19 @@ namespace SofaFactory.Controllers
             {
                 return Problem("Entity set 'ApplicationDbContext.Products'  is null.");
             }
-            var product = await _context.Products.FindAsync(id);
+            var product = await _context.Products.Where(x => x.ProductId == id).Include(x => x.Category).FirstOrDefaultAsync();
+
+            var catName = Uri.EscapeUriString(product.Category.Name);
             if (product != null)
             {
                 _context.Products.Remove(product);
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+
+            return Redirect("/products/category/"+catName);
+
         }
 
         private bool ProductExists(int id)
