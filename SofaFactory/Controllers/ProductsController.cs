@@ -166,6 +166,7 @@ namespace SofaFactory.Controllers
                 ModelState.AddModelError("Images", "Please upload atleast one product image.");
                 return Json(ModelState.ToSerializedDictionary());
             }
+            var cat = Uri.EscapeUriString(_context.Categories.Where(x => x.CategoryId == modal.CategoryId).FirstOrDefault().Name);
             var user = _context.AppUsers.Where(c => c.UserName == User.Identity.Name).FirstOrDefault();
             var product = new Product();
             TinyMapper.Bind<ProductVm, Product>();
@@ -186,7 +187,7 @@ namespace SofaFactory.Controllers
             {
                 await SaveProductImage(modal, product.ProductId);
             }
-            return Ok("Success");
+            return Ok(cat);
             
             //ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CreatedById", product.CategoryId);
             //ViewData["CreatedById"] = new SelectList(_context.Set<AppUser>(), "Id", "Id", product.CreatedById);
